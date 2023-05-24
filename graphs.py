@@ -1,6 +1,7 @@
 import networkx as nx
 import my_networkx as my_nx
 import matplotlib.pyplot as plt
+from Pile import Pile
 
 G = nx.DiGraph()
 
@@ -11,15 +12,5 @@ G.add_node(3)
 edge_list = [(1,2,{"w": "c1"}),(2,1,{"w": "c2"}),(1,3,{"w": "s1"}),(2,3,{"w": "s2"})]
 G.add_edges_from(edge_list)
 
-def affichage(G):
-    pos = nx.spring_layout(G, seed=5)
-    fig, ax = plt.subplots()
-    nx.draw_networkx_nodes(G, pos, ax=ax)
-    nx.draw_networkx_labels(G,pos,ax=ax)
-
-    curved_edges = [edge for edge in G.edges()]
-    nx.draw_networkx_edges(G, pos, edgelist=curved_edges, connectionstyle='arc3, rad=0.25')
-    edge_weights = nx.get_edge_attributes(G,'w')
-    curved_edge_labels = {edge: edge_weights[edge] for edge in curved_edges}
-    my_nx.my_draw_networkx_edge_labels(G, pos, ax=ax, edge_labels=curved_edge_labels,rotate=False,rad = 0.25)
-    plt.show()
+preferences_v1 = [[(1,2), (2,1)], [(1,3)], [(1,2),(2,3)]]
+preferences_v2 = [[(2,1), (1,2)], [(2,3)], [(2,1),(1,3)]]
