@@ -5,7 +5,12 @@ import my_networkx as my_nx
 
 def init():
     G = nx.DiGraph()
-    nb_noeud = int(input("nombre de noeuds: "))
+    G.add_node("v1")
+    G.add_node("v2")
+    G.add_node("vB")
+    edge_list = [("v1", "v2", {"w": "c1"}), ("v2", "v1", {"w": "c2"}), ("v1", "vB", {"w": "s1"}), ("v2", "vB", {"w": "s2"})]
+    G.add_edges_from(edge_list)
+    """nb_noeud = int(input("nombre de noeuds: "))
     for i in range(nb_noeud):
         label = input(f"label du noeud {i+1}: ")
         G.add_node(label)
@@ -13,9 +18,9 @@ def init():
     print("arc: source destination label")
     for i in range(nb_arcs):
         source, dest, label = input(f"arc {i+1}: ").split()
-        G.add_edges_from([(source, dest, {"w": label})])
+        G.add_edges_from([(source, dest, {"w": label})])"""
     M_aj = nx.adjacency_matrix(G)
-
+    affichage(G)
 
 
 def affichage(G):
