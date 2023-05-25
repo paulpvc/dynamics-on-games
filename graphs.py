@@ -12,8 +12,8 @@ G.add_node(3)
 edge_list = [(1,2,{"w": "c1"}),(2,1,{"w": "c2"}),(1,3,{"w": "s1"}),(2,3,{"w": "s2"})]
 G.add_edges_from(edge_list)
 
-preferences = [[{(1,2), (2,1)}, {(1,3)}, {(1,2),(2,3)}],
-               [{(2,1), (1,2)}, {(2,3)}, {(2,1),(1,3)}]]
+preferences = {1: [{(1,2), (2,1)}, {(1,3)}, {(1,2),(2,3)}],
+               2: [{(2,1), (1,2)}, {(2,3)}, {(2,1),(1,3)}]}
 
 def affichage(G):
     pos = nx.spring_layout(G, seed=5)
@@ -28,8 +28,19 @@ def affichage(G):
     my_nx.my_draw_networkx_edge_labels(G, pos, ax=ax, edge_labels=curved_edge_labels, rotate=False, rad=0.25)
     plt.show()
 
+def affichage_dyna(G):
+    pos = nx.spring_layout(G, seed=5)
+    fig, ax = plt.subplots()
+    nx.draw_networkx_nodes(G, pos, ax=ax)
+    nx.draw_networkx_labels(G, pos, ax=ax)
 
-affichage(G)
+    curved_edges = [edge for edge in G.edges()]
+    nx.draw_networkx_edges(G, pos, edgelist=curved_edges, connectionstyle='arc3, rad=0.25')
+
+    plt.show()
+
+
+#affichage(G)
 
 """dyna_P1 = nx.DiGraph()
 all_neighbors = [G.neighbors(n) for n in G.nodes()]
@@ -75,14 +86,35 @@ def const_chemins(G: nx.DiGraph, nodes, i):
 chemins_dyna = const_chemins(G, nodes, 0)
 print(chemins_dyna)
 
-def gain(preferences: list, strategy: set, i: int):
-    for j in range(len(preferences[i])):
-        pref = preferences[i][j]
+
+
+def gain(preferences: dict, strategy: set, key):
+    for j in range(len(preferences[key])):
+        pref = preferences[key][j]
         if pref.issubset(strategy):
             return j
     return 0
 
-for i in range(len(preferences)):
-    print(f'gains joueur {i+1}:')
+
+for i in preferences.keys():
+    print(f'gains joueur {i}:')
     for ch in chemins_dyna:
         print(ch, gain(preferences, ch, i))
+
+
+def const_dyna_graph(preferences: dict, chemins_dyna : list[set]):
+    dyna_P1 = nx.DiGraph()
+    for i in range(len(chemins_dyna)):
+        strategy1 = chemins_dyna[i]
+        for j in range(len(chemins_dyna)):
+            strategy2 = chemins_dyna[j]
+            difference = strategy1.difference(strategy2)
+            #print(difference)
+            if len(difference) == 1:
+                node = difference.pop()
+                if gain(preferences, strategy1, node[0]) < gain(preferences, strategy2, node[0]):
+                    dyna_P1.add_edge(i, j)
+    return dyna_P1
+
+dyna_P1 = const_dyna_graph(preferences, chemins_dyna)
+affichage_dyna(dyna_P1)
