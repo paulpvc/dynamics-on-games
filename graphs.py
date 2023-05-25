@@ -36,11 +36,11 @@ def affichage_dyna(G):
 
     curved_edges = [edge for edge in G.edges()]
     nx.draw_networkx_edges(G, pos, edgelist=curved_edges, connectionstyle='arc3, rad=0.25')
-    edge_weights = nx.get_edge_attributes(G, 'w')
+
     plt.show()
 
 
-affichage(G)
+#affichage(G)
 
 """dyna_P1 = nx.DiGraph()
 all_neighbors = [G.neighbors(n) for n in G.nodes()]
@@ -86,6 +86,8 @@ def const_chemins(G: nx.DiGraph, nodes, i):
 chemins_dyna = const_chemins(G, nodes, 0)
 print(chemins_dyna)
 
+
+
 def gain(preferences: dict, strategy: set, key):
     for j in range(len(preferences[key])):
         pref = preferences[key][j]
@@ -102,14 +104,16 @@ for i in preferences.keys():
 
 def const_dyna_graph(preferences: dict, chemins_dyna : list[set]):
     dyna_P1 = nx.DiGraph()
-    for strategy1 in chemins_dyna:
-        for strategy2 in chemins_dyna:
+    for i in range(len(chemins_dyna)):
+        strategy1 = chemins_dyna[i]
+        for j in range(len(chemins_dyna)):
+            strategy2 = chemins_dyna[j]
             difference = strategy1.difference(strategy2)
-            print(difference)
+            #print(difference)
             if len(difference) == 1:
                 node = difference.pop()
                 if gain(preferences, strategy1, node[0]) < gain(preferences, strategy2, node[0]):
-                    dyna_P1.add_edge(strategy1, strategy2)
+                    dyna_P1.add_edge(i, j)
     return dyna_P1
 
 dyna_P1 = const_dyna_graph(preferences, chemins_dyna)
