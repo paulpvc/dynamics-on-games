@@ -102,7 +102,7 @@ for i in preferences.keys():
         print(ch, gain(preferences, ch, i))
 
 
-def const_dyna_graph(preferences: dict, chemins_dyna : list[set]):
+def const_dyna_graph_P1(preferences: dict, chemins_dyna : list[set]):
     dyna_P1 = nx.DiGraph()
     for i in range(len(chemins_dyna)):
         strategy1 = chemins_dyna[i]
@@ -117,18 +117,19 @@ def const_dyna_graph(preferences: dict, chemins_dyna : list[set]):
     return dyna_P1
 
 
-dyna_P1 = const_dyna_graph(preferences, chemins_dyna)
+dyna_P1 = const_dyna_graph_P1(preferences, chemins_dyna)
 affichage_dyna(dyna_P1)
 
 
 def loop_cycle_detection(G: nx.DiGraph):
     seen = {node: False for node in list(G.nodes())}
     current_path = {node: False for node in list(G.nodes())}
-    for node in G.nodes:
+    for node in G.nodes():
         if not seen[node]:
             if cycle_detection(G, node, seen, current_path):
                 return True
     return False
+
 
 def cycle_detection(G, source, seen: dict, current_path: dict):
     seen[source] = True
@@ -145,3 +146,23 @@ def cycle_detection(G, source, seen: dict, current_path: dict):
 
 print(loop_cycle_detection(dyna_P1))
 
+#TODO: tester la fonction et l'adapter dans le style de Bill-kelly (mauvais stockage des stratégies et de méthode)
+def const_dyna_graph_bestP1(preferences: dict, chemins_dyna : list[set]):
+    dyna_bP1 = nx.DiGraph()
+    for i in range(len(chemins_dyna)):
+        strategy1 = chemins_dyna[i]
+        best_reply = {n: None for n in G.nodes()}
+        for j in range(len(chemins_dyna)):
+            strategy2 = chemins_dyna[j]
+            difference = strategy1.difference(strategy2)
+
+            if len(difference) == 1:
+                node = difference.pop()
+
+                if gain(preferences, strategy1, node[0]) < gain(preferences, strategy2, node[0]):
+                    if best_reply[node[0]] is None or gain(preferences, strategy2, node[0]) > gain(preferences, chemins_dyna[best_reply[node[0]]], node[0]):
+                        best_reply[node[0]] = j
+
+        for reply in best_reply.values():
+            dyna_bP1.add_edge(i, reply)
+    return dyna_bP1
