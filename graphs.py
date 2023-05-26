@@ -40,7 +40,7 @@ def affichage_dyna(G):
     plt.show()
 
 
-#affichage(G)
+affichage(G)
 
 """dyna_P1 = nx.DiGraph()
 all_neighbors = [G.neighbors(n) for n in G.nodes()]
@@ -116,5 +116,32 @@ def const_dyna_graph(preferences: dict, chemins_dyna : list[set]):
                     dyna_P1.add_edge(i, j)
     return dyna_P1
 
+
 dyna_P1 = const_dyna_graph(preferences, chemins_dyna)
 affichage_dyna(dyna_P1)
+
+
+def loop_cycle_detection(G: nx.DiGraph):
+    seen = {node: False for node in list(G.nodes())}
+    current_path = {node: False for node in list(G.nodes())}
+    for node in G.nodes:
+        if not seen[node]:
+            if cycle_detection(G, node, seen, current_path):
+                return True
+    return False
+
+def cycle_detection(G, source, seen: dict, current_path: dict):
+    seen[source] = True
+    current_path[source] = True
+
+    for node in G.neighbors(source):
+        if not seen[node]:
+            if cycle_detection(G, node, seen, current_path):
+                return True
+        elif current_path[node]:
+            return True
+    current_path[source] = False
+    return False
+
+print(loop_cycle_detection(dyna_P1))
+
