@@ -1,7 +1,5 @@
+from util import *
 import networkx as nx
-import my_networkx as my_nx
-import matplotlib.pyplot as plt
-from Pile import Pile
 
 G = nx.DiGraph()
 
@@ -15,29 +13,7 @@ G.add_edges_from(edge_list)
 preferences = {1: [{(1,2), (2,1)}, {(1,3)}, {(1,2),(2,3)}],
                2: [{(2,1), (1,2)}, {(2,3)}, {(2,1),(1,3)}]}
 
-def affichage(G):
-    pos = nx.spring_layout(G, seed=5)
-    fig, ax = plt.subplots()
-    nx.draw_networkx_nodes(G, pos, ax=ax)
-    nx.draw_networkx_labels(G, pos, ax=ax)
 
-    curved_edges = [edge for edge in G.edges()]
-    nx.draw_networkx_edges(G, pos, edgelist=curved_edges, connectionstyle='arc3, rad=0.25')
-    edge_weights = nx.get_edge_attributes(G, 'w')
-    curved_edge_labels = {edge: edge_weights[edge] for edge in curved_edges}
-    my_nx.my_draw_networkx_edge_labels(G, pos, ax=ax, edge_labels=curved_edge_labels, rotate=False, rad=0.25)
-    plt.show()
-
-def affichage_dyna(G):
-    pos = nx.spring_layout(G, seed=5)
-    fig, ax = plt.subplots()
-    nx.draw_networkx_nodes(G, pos, ax=ax)
-    nx.draw_networkx_labels(G, pos, ax=ax)
-
-    curved_edges = [edge for edge in G.edges()]
-    nx.draw_networkx_edges(G, pos, edgelist=curved_edges, connectionstyle='arc3, rad=0.25')
-
-    plt.show()
 
 
 affichage(G)
@@ -68,6 +44,13 @@ print(nodes)
 
 
 def const_chemins(G: nx.DiGraph, nodes, i):
+    """
+    fonction déterminant les stratégie possibles pour le jeu donnée, spécialisé pour P1
+    :param G: graphe à utiliser
+    :param nodes: noeuds du graphe triés par ordre de degré
+    :param i: indice du noeud dans la liste
+    :return: liste de sets de chaques stratégie
+    """
     if i < len(nodes):
         res = []
         for n in G.neighbors(nodes[i]):
@@ -89,6 +72,13 @@ print(chemins_dyna)
 
 
 def gain(preferences: dict, strategy: set, key):
+    """
+    calcul du gain pour la stratégie donnée en fonction de la préférence du joueur donnée (key)
+    :param preferences: préférences de tous les joueurs
+    :param strategy: la strategy dont on veut savoir l'outcome
+    :param key: l'indice du joueur
+    :return: int: outcome de la stratégie
+    """
     for j in range(len(preferences[key])):
         pref = preferences[key][j]
         if pref.issubset(strategy):
@@ -122,6 +112,12 @@ affichage_dyna(dyna_P1)
 
 
 def loop_cycle_detection(G: nx.DiGraph):
+    """
+    fonction déterminant la présence de cycle dans un graphe orienté, piur ça on exécute un parcours en profondeur
+    sur le graphe depuis chaques noeuds (loop dans le nom)
+    :param G: le graphe à analyser
+    :return: booléen pour savoir si il y a un cycle
+    """
     seen = {node: False for node in list(G.nodes())}
     current_path = {node: False for node in list(G.nodes())}
     for node in G.nodes():
@@ -132,6 +128,14 @@ def loop_cycle_detection(G: nx.DiGraph):
 
 
 def cycle_detection(G, source, seen: dict, current_path: dict):
+    """
+    fonction récursive éffectuant le DFS en retenant les noeuds déjà parcouru et le chemin actuel
+    :param G: le graphe à parcourir
+    :param source: le noeud actuel (de départ)
+    :param seen: le dict des noeuds déjà parcouru
+    :param current_path: dict indiquant quels noeuds font partie du chemin actuel
+    :return: booléan attestant si il y a un cycle dans le graphe
+    """
     seen[source] = True
     current_path[source] = True
 
@@ -148,6 +152,13 @@ print(loop_cycle_detection(dyna_P1))
 
 #TODO: tester la fonction et l'adapter dans le style de Bill-kelly (mauvais stockage des stratégies et de méthode)
 def const_dyna_graph_bestP1(preferences: dict, chemins_dyna : list[set]):
+    """
+    fonction mémorisant la meilleur réponse pour chaques stratégie et chaques joueur pour savoir
+    où mettre des arcs dans le graphe
+    :param preferences: chemins préférés des joueurs
+    :param chemins_dyna: noeuds du graphe de dynamiques qui sont des routes
+    :return: le grapeh de la dynamique bP1
+    """
     dyna_bP1 = nx.DiGraph()
     for i in range(len(chemins_dyna)):
         strategy1 = chemins_dyna[i]
