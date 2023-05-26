@@ -25,12 +25,28 @@ def get_strategy_profiles(graph:nx.DiGraph):
      strategy_profiles = []
      players_actions = {}
      for node in list(graph.nodes):
-         if graph.out_degree[node]>0:
-            players_actions[node]= list(graph.edges([node]))
-     strategy_profiles = [set(strategy) for strategy in (product(*players_actions.values()))]
+         if graph.out_degree[node] > 0:
+            players_actions[node] = list(graph.edges([node]))
+     strategy_profiles =  list((product(*players_actions.values())))
      return strategy_profiles
 
-def get_labelled_strategy_profiles(graph:nx.DiGraph):
+
+def get_nodes_of_dynamic_graph(graph:nx.DiGraph):
+    nodes = []
+    node_label_content = []
+    strategy_profiles = get_strategy_profiles(graph)
+    for strategy_profile in strategy_profiles:
+        for player_strategy in strategy_profile:
+            node_label_content.append(graph.get_edge_data(*player_strategy)["w"])
+        nodes.append(''.join(node_label_content))
+        node_label_content = []
+    return nodes
+
+
+
+
+
+"""def get_labelled_strategy_profiles(graph:nx.DiGraph):
     strategy_profiles =get_strategy_profiles(graph)
     labelled_strategy_profiles = []
     for strategy_profile in strategy_profiles:
@@ -38,7 +54,7 @@ def get_labelled_strategy_profiles(graph:nx.DiGraph):
         for player_strategy in strategy_profile:
             labels.add(graph.get_edge_data(*(player_strategy))["w"])
         labelled_strategy_profiles.append(labels)
-    return labelled_strategy_profiles
+    return labelled_strategy_profiles"""
 
 def is_edge(node1, node2,pref):
     if len(node1.intersection(node2)) == 1 and pref.index(node1) < pref.index(node2):
@@ -60,6 +76,8 @@ preferences_1 = [{"c1","c2"},{"s1,s2"},{"c1","s2"}]
 preferences_2 = [{"c2","c1"},{"s2,s1"},{"c2","s1"}]
 
 graph1 = get_graph([1,2,3],[(1,2,{"w": "c1"}),(2,1,{"w": "c2"}),(1,3,{"w": "s1"}),(2,3,{"w": "s2"})])
+print(get_strategy_profiles(graph1))
+print(get_nodes_of_dynamic_graph(graph1))
 
 
 
