@@ -230,8 +230,14 @@ def const_dyna_graph_bestPC(preferences: dict, chemins_dyna : list[set]):
                             temp.add(edge2)
                             break
                     if gain(preferences, strategy1, edge1[0]) <= gain(preferences, temp, edge1[0]):
-                        if best_reply[edge1[0]] is None or gain(preferences, temp, edge1[0]) > gain(preferences, best_reply[edge1])
+                        if best_reply[edge1[0]] is None or gain(preferences, temp, edge1[0]) > gain(preferences, best_reply[edge1[0]][1], edge1[0]):
+                            best_reply[edge1[0]] = (j,temp)
                         count += 1
-                if count == len(difference):
-                    dyna_bPC.add_edge(i, j)
+                for reply in best_reply.values():
+                    if reply is not None:
+                        dyna_bPC.add_edge(i, reply[0])
     return dyna_bPC
+
+
+dyna_bPC = const_dyna_graph_bestPC(preferences, chemins_dyna)
+affichage_dyna(dyna_bPC)
