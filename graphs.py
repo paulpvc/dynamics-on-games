@@ -175,5 +175,63 @@ def const_dyna_graph_bestP1(preferences: dict, chemins_dyna : list[set]):
                         best_reply[node[0]] = j
 
         for reply in best_reply.values():
-            dyna_bP1.add_edge(i, reply)
+            if reply is not None:
+                dyna_bP1.add_edge(i, reply)
     return dyna_bP1
+
+
+dyna_bP1 = const_dyna_graph_bestP1(preferences, chemins_dyna)
+affichage_dyna(dyna_bP1)
+
+def const_dyna_graph_PC(preferences: dict, chemins_dyna : list[set]):
+    dyna_PC = nx.DiGraph()
+    for i in range(len(chemins_dyna)):
+        strategy1 = chemins_dyna[i]
+        for j in range(len(chemins_dyna)):
+            strategy2 = chemins_dyna[j]
+            difference = strategy1.difference(strategy2)
+            difference2 = strategy2.difference(strategy1)
+            #print(difference)
+            if len(difference) > 0:
+                count = 0
+                for edge1 in difference:
+                    for edge2 in difference2:
+                        if edge2[0] == edge1[0]:
+                            temp = strategy1.copy()
+                            temp.discard(edge1)
+                            temp.add(edge2)
+                            break
+                    if gain(preferences, strategy1, edge1[0]) <= gain(preferences, temp, edge1[0]):
+                        count += 1
+                if count == len(difference):
+                    dyna_PC.add_edge(i, j)
+    return dyna_PC
+
+dyna_PC = const_dyna_graph_PC(preferences, chemins_dyna)
+affichage_dyna(dyna_PC)
+
+def const_dyna_graph_bestPC(preferences: dict, chemins_dyna : list[set]):
+    dyna_bPC = nx.DiGraph()
+    for i in range(len(chemins_dyna)):
+        strategy1 = chemins_dyna[i]
+        best_reply = {n: None for n in G.nodes()}
+        for j in range(len(chemins_dyna)):
+            strategy2 = chemins_dyna[j]
+            difference = strategy1.difference(strategy2)
+            difference2 = strategy2.difference(strategy1)
+            #print(difference)
+            if len(difference) > 0:
+                count = 0
+                for edge1 in difference:
+                    for edge2 in difference2:
+                        if edge2[0] == edge1[0]:
+                            temp = strategy1.copy()
+                            temp.discard(edge1)
+                            temp.add(edge2)
+                            break
+                    if gain(preferences, strategy1, edge1[0]) <= gain(preferences, temp, edge1[0]):
+                        if best_reply[edge1[0]] is None or gain(preferences, temp, edge1[0]) > gain(preferences, best_reply[edge1])
+                        count += 1
+                if count == len(difference):
+                    dyna_bPC.add_edge(i, j)
+    return dyna_bPC
