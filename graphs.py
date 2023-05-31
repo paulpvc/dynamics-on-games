@@ -7,6 +7,7 @@ G.add_node(1)
 G.add_node(2)
 G.add_node(3)
 
+
 edge_list = [(1,2,{"w": "c1"}),(2,1,{"w": "c2"}),(1,3,{"w": "s1"}),(2,3,{"w": "s2"})]
 G.add_edges_from(edge_list)
 
@@ -16,7 +17,7 @@ preferences = {1: [{(1,2), (2,1)}, {(1,3)}, {(1,2),(2,3)}],
 
 
 
-affichage(G)
+affichage(G, "G")
 
 """dyna_P1 = nx.DiGraph()
 all_neighbors = [G.neighbors(n) for n in G.nodes()]
@@ -26,7 +27,7 @@ for i in range(len(all_neighbors)):
 nodes = list(G.nodes())
 nodes.sort(key=lambda x: len(list(G.neighbors(x))))
 nodes = nodes[1:]
-print(nodes)
+#print(nodes)
 
 """def const_chemins_old(G: nx.DiGraph, nodes, i):
     if i < len(nodes):
@@ -67,7 +68,7 @@ def const_chemins(G: nx.DiGraph, nodes, i):
 
 
 chemins_dyna = const_chemins(G, nodes, 0)
-print(chemins_dyna)
+#print(chemins_dyna)
 
 
 
@@ -86,10 +87,10 @@ def gain(preferences: dict, strategy: set, key):
     return 0
 
 
-for i in preferences.keys():
+"""for i in preferences.keys():
     print(f'gains joueur {i}:')
     for ch in chemins_dyna:
-        print(ch, gain(preferences, ch, i))
+        print(ch, gain(preferences, ch, i))"""
 
 
 def const_dyna_graph_P1(preferences: dict, chemins_dyna : list[set]):
@@ -108,7 +109,7 @@ def const_dyna_graph_P1(preferences: dict, chemins_dyna : list[set]):
 
 
 dyna_P1 = const_dyna_graph_P1(preferences, chemins_dyna)
-affichage_dyna(dyna_P1)
+affichage_dyna(dyna_P1, "P1")
 
 
 def loop_cycle_detection(G: nx.DiGraph):
@@ -148,7 +149,7 @@ def cycle_detection(G, source, seen: dict, current_path: dict):
     current_path[source] = False
     return False
 
-print(loop_cycle_detection(dyna_P1))
+#print(loop_cycle_detection(dyna_P1))
 
 #TODO: tester la fonction et l'adapter dans le style de Bill-kelly (mauvais stockage des stratégies et de méthode)
 def const_dyna_graph_bestP1(preferences: dict, chemins_dyna : list[set]):
@@ -181,7 +182,7 @@ def const_dyna_graph_bestP1(preferences: dict, chemins_dyna : list[set]):
 
 
 dyna_bP1 = const_dyna_graph_bestP1(preferences, chemins_dyna)
-affichage_dyna(dyna_bP1)
+affichage_dyna(dyna_bP1, "bP1")
 
 def const_dyna_graph_PC(preferences: dict, chemins_dyna : list[set]):
     dyna_PC = nx.DiGraph()
@@ -208,7 +209,8 @@ def const_dyna_graph_PC(preferences: dict, chemins_dyna : list[set]):
     return dyna_PC
 
 dyna_PC = const_dyna_graph_PC(preferences, chemins_dyna)
-affichage_dyna(dyna_PC)
+affichage_dyna(dyna_PC, "PC")
+
 
 def const_dyna_graph_bestPC(preferences: dict, chemins_dyna : list[set]):
     dyna_bPC = nx.DiGraph()
@@ -249,4 +251,61 @@ def const_dyna_graph_bestPC(preferences: dict, chemins_dyna : list[set]):
     return dyna_bPC
 
 dyna_bPC = const_dyna_graph_bestPC(preferences, chemins_dyna)
-affichage_dyna(dyna_bPC)
+affichage_dyna(dyna_bPC, "bPC")
+
+print("terminaison de P1: "+str(not loop_cycle_detection(dyna_P1)))
+print("terminaison de bP1: "+str(not loop_cycle_detection(dyna_bP1)))
+print("terminaison de PC: "+str(not loop_cycle_detection(dyna_PC)))
+print("terminaison de bPC: "+str(not loop_cycle_detection(dyna_bPC)))
+
+
+def loop_get_cycles(G: nx.DiGraph):
+    seen = {node: False for node in list(G.nodes())}
+    current_path = []
+    path_id = {n: -1 for n in G.nodes()}
+    cycles = []
+    for node in G.nodes():
+        if not seen[node]:
+            cycle = get_cycles(G, node, seen, current_path, path_id)
+            if len(cycle) > 0:
+                cycles.append(cycle)
+    return cycles
+
+
+def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: dict):
+    seen[source] = True
+    current_path.append(source)
+    id_dict[source] = len(current_path)-1
+    for node in G.neighbors(source):
+        if not seen[node]:
+            temp = get_cycles(G, node, seen, current_path, id_dict)
+            if len(temp) > 0:
+                return temp
+        elif id_dict[node] > -1:
+            return current_path[id_dict[node]:]
+    current_path.pop(-1)
+    id_dict[source] = -1
+    return []
+# pour de l affichage il suffit de récupérer les edge_data pour obtenir les noms des arcs et pouvoir les plots comme il faut
+
+
+def find_dw(G: nx.DiGraph):
+    cycles = loop_get_cycles(G)
+    for cycle in cycles:
+        count = 0
+        for source in cycle:
+            for node in G.neighbors(source):
+                seen = {n: False for n in G.nodes()}
+
+                if dfs(G, node, seen, cycle):
+                    count += 1
+                    if count == 2:
+                        return True
+    return False
+
+
+temp = find_dw(G)
+if temp:
+    print("terminaison équitable de bPC: impossible de savoir car il y a une DW")
+else:
+    print("terminaison équitable de bPC:", not temp)
