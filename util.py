@@ -37,3 +37,17 @@ def affichage_dyna(G, title=""):
     nx.draw_networkx_edges(G, pos, edgelist=curved_edges, connectionstyle='arc3, rad=0.25')
     plt.title(title)
     plt.show()
+
+
+def dfs(G: nx.DiGraph, source, seen: dict, cycle: list):
+    seen[source] = True
+    if G.out_degree(source) == 0 and G.in_degree(source) > 0:
+        return True
+    for node in G.neighbors(source):
+
+        if node in cycle:
+            return False
+        elif not seen[node]:
+            if dfs(G, node, seen, cycle):
+                return True
+    return False
