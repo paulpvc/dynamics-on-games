@@ -7,7 +7,6 @@ G.add_node(1)
 G.add_node(2)
 G.add_node(3)
 
-
 edge_list = [(1,2,{"w": "c1"}),(2,1,{"w": "c2"}),(1,3,{"w": "s1"}),(2,3,{"w": "s2"})]
 G.add_edges_from(edge_list)
 
@@ -84,7 +83,7 @@ def gain(preferences: dict, strategy: set, key):
         pref = preferences[key][j]
         if pref.issubset(strategy):
             return j
-    return 0
+    return -1
 
 
 """for i in preferences.keys():
@@ -92,8 +91,13 @@ def gain(preferences: dict, strategy: set, key):
     for ch in chemins_dyna:
         print(ch, gain(preferences, ch, i))"""
 
+def get_edge_name(edges: set, G: nx.DiGraph):
+    res = ""
+    for edge in edges:
+        res += G.get_edge_data(*edge)["w"]
+    return res
 
-def const_dyna_graph_P1(preferences: dict, chemins_dyna : list[set]):
+def const_dyna_graph_P1(preferences: dict, chemins_dyna : list[set], G: nx.DiGraph):
     dyna_P1 = nx.DiGraph()
     for i in range(len(chemins_dyna)):
         strategy1 = chemins_dyna[i]
@@ -104,12 +108,12 @@ def const_dyna_graph_P1(preferences: dict, chemins_dyna : list[set]):
             if len(difference) == 1:
                 node = difference.pop()
                 if gain(preferences, strategy1, node[0]) < gain(preferences, strategy2, node[0]):
-                    dyna_P1.add_edge(i, j)
+                    dyna_P1.add_edge(get_edge_name(strategy1,G), get_edge_name(strategy2, G))
     return dyna_P1
 
 
-dyna_P1 = const_dyna_graph_P1(preferences, chemins_dyna)
-affichage_dyna(dyna_P1, "P1")
+"""dyna_P1 = const_dyna_graph_P1(preferences, chemins_dyna)
+affichage_dyna(dyna_P1, "P1")"""
 
 
 def loop_cycle_detection(G: nx.DiGraph):
@@ -181,10 +185,12 @@ def const_dyna_graph_bestP1(preferences: dict, chemins_dyna : list[set]):
     return dyna_bP1
 
 
-dyna_bP1 = const_dyna_graph_bestP1(preferences, chemins_dyna)
-affichage_dyna(dyna_bP1, "bP1")
+"""dyna_bP1 = const_dyna_graph_bestP1(preferences, chemins_dyna)
+affichage_dyna(dyna_bP1, "bP1")"""
 
-def const_dyna_graph_PC(preferences: dict, chemins_dyna : list[set]):
+
+
+def const_dyna_graph_PC(preferences: dict, chemins_dyna : list[set], G: nx.DiGraph):
     dyna_PC = nx.DiGraph()
     for i in range(len(chemins_dyna)):
         strategy1 = chemins_dyna[i]
@@ -193,6 +199,8 @@ def const_dyna_graph_PC(preferences: dict, chemins_dyna : list[set]):
             difference = strategy1.difference(strategy2)
             difference2 = strategy2.difference(strategy1)
             #print(difference)
+            #if len(difference) != len(difference2):
+                #print(difference, difference2, chemins_dyna[i], chemins_dyna[j])
             if len(difference) > 0:
                 count = 0
                 for edge1 in difference:
@@ -202,14 +210,15 @@ def const_dyna_graph_PC(preferences: dict, chemins_dyna : list[set]):
                             temp.discard(edge1)
                             temp.add(edge2)
                             break
-                    if gain(preferences, strategy1, edge1[0]) <= gain(preferences, temp, edge1[0]):
+                    #print(strategy1, strategy2, gain(preferences, strategy1, edge1[0]),gain(preferences, temp, edge1[0]), edge1)
+                    if gain(preferences, strategy1, edge1[0]) < gain(preferences, temp, edge1[0]):
                         count += 1
                 if count == len(difference):
-                    dyna_PC.add_edge(i, j)
+                    dyna_PC.add_edge(get_edge_name(chemins_dyna[i], G), get_edge_name(chemins_dyna[j], G))
     return dyna_PC
 
-dyna_PC = const_dyna_graph_PC(preferences, chemins_dyna)
-affichage_dyna(dyna_PC, "PC")
+"""dyna_PC = const_dyna_graph_PC(preferences, chemins_dyna, G)
+affichage_dyna(dyna_PC, "PC")"""
 
 
 def const_dyna_graph_bestPC(preferences: dict, chemins_dyna : list[set]):
@@ -250,13 +259,13 @@ def const_dyna_graph_bestPC(preferences: dict, chemins_dyna : list[set]):
                             dyna_bPC.add_edge(i, j)
     return dyna_bPC
 
-dyna_bPC = const_dyna_graph_bestPC(preferences, chemins_dyna)
-affichage_dyna(dyna_bPC, "bPC")
+"""dyna_bPC = const_dyna_graph_bestPC(preferences, chemins_dyna)
+affichage_dyna(dyna_bPC, "bPC")"""
 
-print("terminaison de P1: "+str(not loop_cycle_detection(dyna_P1)))
+"""print("terminaison de P1: "+str(not loop_cycle_detection(dyna_P1)))
 print("terminaison de bP1: "+str(not loop_cycle_detection(dyna_bP1)))
 print("terminaison de PC: "+str(not loop_cycle_detection(dyna_PC)))
-print("terminaison de bPC: "+str(not loop_cycle_detection(dyna_bPC)))
+print("terminaison de bPC: "+str(not loop_cycle_detection(dyna_bPC)))"""
 
 
 def loop_get_cycles(G: nx.DiGraph):
