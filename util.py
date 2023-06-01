@@ -28,7 +28,7 @@ def affichage_dyna(G, title=""):
     :param G: graphe d'une dynamique à afficher
     :return: None
     """
-    pos = nx.spring_layout(G, seed=5)
+    pos = nx.spring_layout(G, seed=5, k=5)
     fig, ax = plt.subplots()
     nx.draw_networkx_nodes(G, pos, ax=ax)
     nx.draw_networkx_labels(G, pos, ax=ax)
@@ -46,6 +46,8 @@ def dfs(G: nx.DiGraph, source, seen: dict, cycle: list):
     for node in G.neighbors(source):
 
         if node in cycle:
+            #TODO Verifier que c'est une condition nécéssaire car il existe des graphes pour lesquels Gdis est mineur
+            #Il faut surement rajouter la notion de préférence parce que c'est trop général?
             return False
         elif not seen[node]:
             if dfs(G, node, seen, cycle):
