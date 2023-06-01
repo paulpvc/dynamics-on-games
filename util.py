@@ -9,7 +9,7 @@ def affichage(G, title=""):
     :param G: graphe à afficher (arcs possédant tous des noms)
     :return: None
     """
-    pos = nx.spring_layout(G, seed=5)
+    pos = nx.spring_layout(G, seed=10)
     fig, ax = plt.subplots()
     nx.draw_networkx_nodes(G, pos, ax=ax)
     nx.draw_networkx_labels(G, pos, ax=ax)
