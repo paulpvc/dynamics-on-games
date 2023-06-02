@@ -27,3 +27,5 @@ class GraphP1:
     def does_terminate(self):
         return not loop_cycle_detection(self.graph_dyna)
 
+
+

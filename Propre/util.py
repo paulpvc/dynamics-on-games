@@ -1,6 +1,7 @@
 import networkx as nx
 import my_networkx as my_nx
 import matplotlib.pyplot as plt
+from itertools import product
 
 def outcome(preference: list, strategy: set):
     """
@@ -60,6 +61,32 @@ def cycle_detection(G, source, seen: dict, current_path: dict):
     current_path[source] = False
     return False
 
+
+def get_strategy_profiles(graph: nx.DiGraph):
+    players_actions = {}
+    for node in list(graph.nodes):
+        if graph.out_degree[node] > 0:
+            players_actions[node] = list(graph.edges([node]))
+    strategy_profiles = [set(strategy_profile) for strategy_profile in (product(*players_actions.values()))]
+    return strategy_profiles
+
+
+"""def get_nodes_of_dynamic_graph(graph: nx.DiGraph):
+    nodes = []
+    my_list = []
+    strategy_profiles = get_strategy_profiles(graph)
+    for strategy_profile in strategy_profiles:
+        node_label_content = []
+        set_of_edges_label = set()
+        for player_strategy in strategy_profile:
+            temp = graph.get_edge_data(*player_strategy)["w"]
+            node_label_content.append(temp)
+            set_of_edges_label.add(temp)
+        nodes.append(''.join(node_label_content))
+        my_list.append(set_of_edges_label)
+
+    return nodes, my_list
+"""
 
 def affichage(G, title=""):
     """
