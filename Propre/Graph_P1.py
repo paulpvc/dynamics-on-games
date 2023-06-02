@@ -19,7 +19,7 @@ class GraphP1:
     def is_edge(self, node1, node2):
         difference = node1.difference(node2)
         if len(difference) == 1:
-            player = difference.pop()
+            player = difference.pop()[0]
             if outcome(player.preference, node1) < outcome(player.preference, node2):
                 return True
         return False
