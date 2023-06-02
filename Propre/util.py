@@ -2,6 +2,64 @@ import networkx as nx
 import my_networkx as my_nx
 import matplotlib.pyplot as plt
 
+def outcome(preference: list, strategy: set):
+    """
+    calcul du gain pour la stratégie donnée en fonction de la préférence du joueur donnée (key)
+    :param preferences: préférences de tous les joueurs
+    :param strategy: la strategy dont on veut savoir l'outcome
+    :return: int: outcome de la stratégie
+    """
+    for j in range(len(preference)):
+        pref = preference[j]
+        if pref.issubset(strategy):
+            return j
+    return -1
+
+
+def get_edge_name(edges: set, G: nx.DiGraph):
+    res = ""
+    for edge in edges:
+        res += G.get_edge_data(*edge)["w"]
+    return res
+
+
+def loop_cycle_detection(G: nx.DiGraph):
+    """
+    fonction déterminant la présence de cycle dans un graphe orienté, piur ça on exécute un parcours en profondeur
+    sur le graphe depuis chaques noeuds (loop dans le nom)
+    :param G: le graphe à analyser
+    :return: booléen pour savoir si il y a un cycle
+    """
+    seen = {node: False for node in list(G.nodes())}
+    current_path = {node: False for node in list(G.nodes())}
+    for node in G.nodes():
+        if not seen[node]:
+            if cycle_detection(G, node, seen, current_path):
+                return True
+    return False
+
+
+def cycle_detection(G, source, seen: dict, current_path: dict):
+    """
+    fonction récursive éffectuant le DFS en retenant les noeuds déjà parcouru et le chemin actuel
+    :param G: le graphe à parcourir
+    :param source: le noeud actuel (de départ)
+    :param seen: le dict des noeuds déjà parcouru
+    :param current_path: dict indiquant quels noeuds font partie du chemin actuel
+    :return: booléan attestant si il y a un cycle dans le graphe
+    """
+    seen[source] = True
+    current_path[source] = True
+
+    for node in G.neighbors(source):
+        if not seen[node]:
+            if cycle_detection(G, node, seen, current_path):
+                return True
+        elif current_path[node]:
+            return True
+    current_path[source] = False
+    return False
+
 
 def affichage(G, title=""):
     """
