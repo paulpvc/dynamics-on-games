@@ -3,6 +3,14 @@ import my_networkx as my_nx
 import matplotlib.pyplot as plt
 from itertools import product
 
+
+
+def get_graph(nodes: list, edges: list[tuple]):
+    graph = nx.DiGraph()
+    graph.add_nodes_from(nodes)
+    graph.add_edges_from(edges)
+    return graph
+
 def outcome(preference: list, strategy: set):
     """
     calcul du gain pour la stratégie donnée en fonction de la préférence du joueur donnée (key)
@@ -64,11 +72,14 @@ def cycle_detection(G, source, seen: dict, current_path: dict):
 
 def get_strategy_profiles(graph: nx.DiGraph):
     players_actions = {}
+    print(list(graph.nodes))
     for node in list(graph.nodes):
         if graph.out_degree[node] > 0:
             players_actions[node] = list(graph.edges([node]))
     strategy_profiles = [set(strategy_profile) for strategy_profile in (product(*players_actions.values()))]
     return strategy_profiles
+
+
 
 
 """def get_nodes_of_dynamic_graph(graph: nx.DiGraph):

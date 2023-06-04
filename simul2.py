@@ -123,7 +123,7 @@ graph1 = get_graph([1,2,3,4],arcs)
 print(get_edges_of_dynamic_P1_graph(graph1,preferences))
 print()
 
-graph2 = get_graph(get_nodes_of_dynamic_graph(graph1)[0],get_edges_of_dynamic_P1_graph(graph1,preferences))
+graph2 = get_graph(get_nodes_of_dynamic_graph(graph1)[0],get_edges_of_dynamic_P1_graph(graph1,preferences)) 
 
 graph3 = get_graph(get_nodes_of_dynamic_graph(graph1)[0],get_edges_of_dynamic_PC_graph(graph1,preferences))
 
