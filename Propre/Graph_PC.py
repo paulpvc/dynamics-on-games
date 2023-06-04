@@ -17,16 +17,16 @@ class GraphPC:
                     dyna_PC.add_edge(get_edge_name(strategy1, self.G), get_edge_name(strategy2, self.G))
         return dyna_PC
 
-
-    def is_edge(self,node1, node2,):
+    @staticmethod
+    def is_edge(G, node1, node2):
         if node1 == node2:
             return False
-        players = list(filter(lambda x: (self.G.out_degree[x] > 0), self.G.nodes))
+        players = list(filter(lambda x: (G.out_degree[x] > 0), G.nodes))
         player_updating_their_strategy_actions = node2.difference(node1)
         nb_player_updating_their_strategy = len(player_updating_their_strategy_actions)
         counter = 0
         for player in players:
-            player_edges = set(self.G.edges([player]))
+            player_edges = set(G.edges([player]))
             player_update = player_edges.intersection(player_updating_their_strategy_actions)
             other_players_actions = node1.difference(player_edges)
             if len(player_update) == 1:

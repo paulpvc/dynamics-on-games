@@ -11,13 +11,13 @@ class GraphbP1:
     def create_dyna(self):
         dyna_bP1 = nx.DiGraph()
         for strategy1 in self.strategies_profiles:
-            best_reply = self.get_best_strategy(strategy1)
-            print(strategy1, best_reply)
+            best_reply = self.get_best_strategy(self, strategy1)
             for better_strategy in best_reply.values():
                 if better_strategy is not None:
                     dyna_bP1.add_edge(get_edge_name(strategy1, self.G), get_edge_name(better_strategy, self.G))
         return dyna_bP1
 
+    @staticmethod
     def get_best_strategy(self, strategy):
         best_reply = {n: None for n in self.G.nodes()}
         for strategy2 in self.strategies_profiles:

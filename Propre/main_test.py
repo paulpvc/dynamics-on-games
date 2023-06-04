@@ -2,6 +2,7 @@ from util import *
 from Graph_P1 import GraphP1
 from Graph_PC import GraphPC
 from Graph_bP1 import GraphbP1
+from Graph_bPC import GraphbPC
 from Player import Player
 
 G = nx.DiGraph()
@@ -18,5 +19,6 @@ G.add_edges_from(edge_list)
 
 #graph_p1 = GraphP1(G, get_strategy_profiles(G))
 #graph_pc = GraphPC(G,get_strategy_profiles(G))
-graph_bp1 = GraphbP1(G, get_strategy_profiles(G))
-affichage_dyna(graph_bp1.graph_dyna)
+#graph_bp1 = GraphbP1(G, get_strategy_profiles(G))
+graph_bpc = GraphbPC(G, get_strategy_profiles(G))
+affichage_dyna(graph_bpc.graph_dyna)
