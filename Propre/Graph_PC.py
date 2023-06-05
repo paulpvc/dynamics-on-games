@@ -13,7 +13,7 @@ class GraphPC:
         dyna_PC = nx.DiGraph()
         for strategy1 in self.strategies_profiles:
             for strategy2 in self.strategies_profiles:
-                if self.is_edge(strategy1, strategy2):
+                if self.is_edge(self.G, strategy1, strategy2):
                     dyna_PC.add_edge(get_edge_name(strategy1, self.G), get_edge_name(strategy2, self.G))
         return dyna_PC
 
