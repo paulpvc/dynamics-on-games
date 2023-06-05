@@ -6,9 +6,9 @@ from Graph_bPC import GraphbPC
 from Player import Player
 
 G = nx.DiGraph()
-v1 = Player("v1", {"c1","s1"})
-v2 = Player("v2", {"c2","s2"})
-vBot = Player("v3", set())
+v1 = Player("v1")
+v2 = Player("v2")
+vBot = Player("v3")
 v1.set_preferences([{(v1,v2), (v2,v1)}, {(v1,vBot)}, {(v1,v2),(v2,vBot)}])
 v2.set_preferences([{(v2,v1), (v1,v2)}, {(v2,vBot)}, {(v2,v1),(v1,vBot)}])
 players = [v1, v2, vBot]

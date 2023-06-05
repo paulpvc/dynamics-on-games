@@ -3,10 +3,9 @@ import networkx as nx
 
 
 class Player:
-    def __init__(self, name, actions: set):
+    def __init__(self, name):
         self.name = name
         self.preference = []
-        self.actions = actions
 
     def set_preferences(self, preference: list[set]):
         self.preference = preference
