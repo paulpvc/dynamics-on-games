@@ -79,7 +79,15 @@ def get_strategy_profiles(graph: nx.DiGraph):
     strategy_profiles = [set(strategy_profile) for strategy_profile in (product(*players_actions.values()))]
     return strategy_profiles
 
-
+def get_edge_by_name(G: nx.DiGraph, preference: list[set[str]]):
+    arcs = []
+    for pref in preference:
+        pref_arcs = set()
+        for edge in G.edges():
+            if G.get_edge_data(*edge)["w"] in pref:
+                pref_arcs.add(edge)
+        arcs.append(pref_arcs)
+    return arcs
 
 
 """def get_nodes_of_dynamic_graph(graph: nx.DiGraph):
