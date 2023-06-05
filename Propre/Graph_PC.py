@@ -31,7 +31,6 @@ class GraphPC:
             other_players_actions = node1.difference(player_edges)
             if len(player_update) == 1:
                 other_players_actions.add(*player_update)
-                print(other_players_actions)
                 if GraphP1.is_edge(node1, other_players_actions):
                     counter += 1
                 other_players_actions.discard(*player_update)
