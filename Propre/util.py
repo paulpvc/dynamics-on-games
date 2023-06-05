@@ -149,3 +149,47 @@ def dfs(G: nx.DiGraph, source, seen: dict, cycle: list):
             if dfs(G, node, seen, cycle):
                 return True
     return False
+
+def loop_get_cycles(G: nx.DiGraph):
+    seen = {node: False for node in list(G.nodes())}
+    current_path = []
+    path_id = {n: -1 for n in G.nodes()}
+    cycles = []
+    for node in G.nodes():
+        if not seen[node]:
+            cycle = get_cycles(G, node, seen, current_path, path_id)
+            if len(cycle) > 0:
+                cycles.append(cycle)
+    return cycles
+
+
+def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: dict):
+    seen[source] = True
+    current_path.append(source)
+    id_dict[source] = len(current_path)-1
+    for node in G.neighbors(source):
+        if not seen[node]:
+            temp = get_cycles(G, node, seen, current_path, id_dict)
+            if len(temp) > 0:
+                return temp
+        elif id_dict[node] > -1:
+            return current_path[id_dict[node]:]
+    current_path.pop(-1)
+    id_dict[source] = -1
+    return []
+# pour de l affichage il suffit de récupérer les edge_data pour obtenir les noms des arcs et pouvoir les plots comme il faut
+
+
+def find_dw(G: nx.DiGraph):
+    cycles = loop_get_cycles(G)
+    for cycle in cycles:
+        count = 0
+        for source in cycle:
+            for node in G.neighbors(source):
+                seen = {n: False for n in G.nodes()}
+
+                if dfs(G, node, seen, cycle):
+                    count += 1
+                    if count == 2:
+                        return True
+    return False
