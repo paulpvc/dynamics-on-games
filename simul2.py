@@ -8,6 +8,7 @@ from util import *
 
 
 
+
 def get_graph(nodes: list, edges: list[tuple]):
     graph = nx.DiGraph()
     graph.add_nodes_from(nodes)
@@ -79,8 +80,7 @@ def get_edges_of_dynamic_PC_graph(graph: nx.DiGraph, preferences,players):
 
 
 def is_edge_in_pc(node1,node2,players:dict,pref):
-    if node1 ==node2:
-        return False
+
     player_updating_their_strategy_actions = node2.difference(node1)
     print("Joueurs changeant de stratégies(actions)",player_updating_their_strategy_actions)
     player_updating_their_strategy = len(player_updating_their_strategy_actions)
@@ -136,7 +136,7 @@ print(get_strategy_profiles(graph1))"""
 
 graph4 = get_graph(get_nodes_of_dynamic_graph(graph1)[0],get_edges_of_dynamic_PC_graph(graph1,preferences,players))
 graph5 = get_graph(get_nodes_of_dynamic_graph(graph1)[0],get_edges_of_dynamic_P1_graph(graph1,preferences))
-affichage_dyna(graph5,"p1")
+affichage_dyna(graph4,"pc")
 #print(get_strategy_profiles(graph1))
 """print(is_edge_in_pc({"c1","c2","c3"},{"s1","s2","s3"},players,preferences))
 print(is_edge_in_P1({"c1","c2","c3"},{"s1","c2","c3"},1,preferences[0]))"""
