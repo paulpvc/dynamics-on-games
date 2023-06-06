@@ -195,6 +195,7 @@ def get_final_matrix(m: np.ndarray):
         m = square_of_m
         square_of_m = m @ m
         print(square_of_m)
+
     return m
 
 
