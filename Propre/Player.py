@@ -5,13 +5,16 @@ import networkx as nx
 class Player:
     def __init__(self, name):
         self.name = name
-        self.preference = [] #a refaire
-        self.preference_graph = nx.DiGraph()
+        self.preference = nx.DiGraph()
 
-    def set_preferences(self, preference: list[set[str]], G: nx.DiGraph):
-        self.preference = preference
-        arcs = get_edge_by_name(G, preference)
-        self.preference = arcs
+    def set_preferences(self, preference):
+        arcs = get_preferencce_edges(preference)
+        self.preference.add_edges_from(arcs)
+        matrix = nx.to_numpy_array(self.preference)
+        for i in range(len(matrix)):
+            matrix[i][i] = 1
+        self.preference = nx.from_numpy_array(matrix, create_using=nx.DiGraph)
+        affichage_dyna(self.preference)
 
     def __repr__(self):
         return str(self.name)

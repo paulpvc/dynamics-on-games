@@ -80,14 +80,12 @@ def get_strategy_profiles(graph: nx.DiGraph):
     strategy_profiles = [set(strategy_profile) for strategy_profile in (product(*players_actions.values()))]
     return strategy_profiles
 
-def get_edge_by_name(G: nx.DiGraph, preference: list[set[str]]):
+def get_preferencce_edges(preference):
     arcs = []
-    for pref in preference:
-        pref_arcs = set()
-        for edge in G.edges():
-            if G.get_edge_data(*edge)["w"] in pref:
-                pref_arcs.add(edge)
-        arcs.append(pref_arcs)
+    for pref_tuple in preference:
+        for i in range(len(pref_tuple)-1):
+            arc = (pref_tuple[i].id, pref_tuple[i+1].id)
+            arcs.append(arc)
     return arcs
 
 
@@ -139,7 +137,7 @@ def affichage_dyna(G, title=""):
     nx.draw_networkx_labels(G, pos, ax=ax)
 
     curved_edges = [edge for edge in G.edges()]
-    nx.draw_networkx_edges(G, pos, edgelist=curved_edges, connectionstyle='arc3, rad=0.25')
+    nx.draw_networkx_edges(G, pos, edgelist=curved_edges, connectionstyle='arc3, rad=0.25', arrows=True)
     plt.title(title)
     plt.show()
 
