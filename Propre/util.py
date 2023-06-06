@@ -90,11 +90,14 @@ def get_dict_index(strat: set, pref_dict: dict):
     return -1
 
 def get_preference_edges(preference, pref_dict: dict):
-    arcs = []
+    arcs = [[0]*len(pref_dict) for _ in range(len(pref_dict))]
     for pref_tuple in preference:
         for i in range(len(pref_tuple)-1):
-            arc = (get_dict_index(pref_tuple[i], pref_dict), get_dict_index(pref_tuple[i+1], pref_dict))
-            arcs.append(arc)
+            id_x = pref_dict[pref_tuple[i]]
+            id_y = pref_dict[pref_tuple[i+1]]
+            arcs[id_x][id_y] = 1
+            """arc = (get_dict_index(pref_tuple[i], pref_dict), get_dict_index(pref_tuple[i+1], pref_dict))
+            arcs.append(arc)"""
     return arcs
 
 
@@ -103,8 +106,8 @@ def get_dict_preference(preferences: list):
     count = 0
     for tpl in preferences:
         for strat in tpl:
-            if strat not in resultat.values():
-                resultat[count] = strat
+            if strat not in resultat:
+                resultat[strat] = count
                 count +=1
     return resultat
 

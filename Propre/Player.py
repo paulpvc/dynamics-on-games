@@ -10,16 +10,21 @@ class Player:
 
     def set_preferences(self, preference):
         self.pref_dict = get_dict_preference(preference)
-        arcs = get_preference_edges(preference, self.pref_dict)
-        self.preference.add_edges_from(arcs)
 
-        matrix = nx.to_numpy_array(self.preference)
+        matrix = get_preference_edges(preference, self.pref_dict)
+
+
         for i in range(len(matrix)):
             matrix[i][i] = 1
 
         matrix = get_final_matrix(matrix)
 
-        self.preference = nx.from_numpy_array(matrix, create_using=nx.DiGraph)
+        lst = list(self.pref_dict.items())
+        lst.sort(key=lambda x: x[1])
+        for i in range(len(matrix)):
+            for j in range(len(matrix)):
+                if matrix[i][j]:
+                    self.preference.add_edge(lst[i][0], lst[j][0])
         affichage_dyna(self.preference)
 
     def __repr__(self):
