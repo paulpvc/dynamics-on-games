@@ -13,15 +13,21 @@ def get_graph(nodes: list, edges: list[tuple]):
     return graph
 
 
-def outcome(preference: nx.DiGraph, strategy: set, strategy2: set):
-    """
-    calcul du gain pour la stratégie donnée en fonction de la préférence du joueur donnée (key)
-    :param preference: préférences de tous les joueurs
-    :param strategy: la strategy dont on veut savoir l'outcome
-    :param strategy2: la 2ème stratégie
-    :return: int: outcome de la stratégie
-    """
-    return preference.has_edge(strategy, strategy2)
+def outcome(preference: nx.DiGraph, pref_dict: dict, strategy: set, strategy2: set):
+
+    ids = [-1, -1]
+    strats = [strategy,strategy2]
+    for i in preference.nodes():
+        for strat_i in range(len(strats)):
+            if pref_dict[i].issubset(strats[strat_i]):
+                strats.pop(strat_i)
+                ids[strat_i] = i
+                break
+        if len(strats) == 0:
+            break
+    if len(strats) > 0:
+        return False
+    return preference.has_edge(ids[0], ids[1])
 
 def get_edge_name(edges: set, G: nx.DiGraph):
     res = ""
