@@ -2,6 +2,7 @@ import networkx as nx
 import my_networkx as my_nx
 import matplotlib.pyplot as plt
 from itertools import product
+import numpy as np
 
 
 
@@ -186,6 +187,15 @@ def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: d
     id_dict[source] = -1
     return []
 # pour de l affichage il suffit de récupérer les edge_data pour obtenir les noms des arcs et pouvoir les plots comme il faut
+
+
+def get_final_matrix(m: np.ndarray):
+    square_of_m = m**2
+    while(not np.array_equal(m,square_of_m)):
+        m = square_of_m
+        square_of_m = np.matmul(square_of_m,square_of_m)
+    return m
+
 
 
 def find_dw(G: nx.DiGraph):
