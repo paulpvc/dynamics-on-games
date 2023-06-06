@@ -187,12 +187,16 @@ def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: d
 # pour de l affichage il suffit de récupérer les edge_data pour obtenir les noms des arcs et pouvoir les plots comme il faut
 
 def get_product_matrix(mat1,mat2):
-    if len(mat1[0]) == len(mat2):
+    mat1_row = len(mat1)
+    mat1_columm = len(mat1[0])
+    mat2_row = len(mat2)
+    mat2_column = len(mat2[0])
+    if mat1_columm != mat2_row:
         return -1
-    result = []
-    for i in range(len(mat1)):
-        for j in range(len(mat2[0])):
-            for k in range(len(mat2)):
+    result = np.zeros((mat1_row,mat2_column))
+    for i in range(mat1_row):
+        for j in range(mat2_column):
+            for k in range(mat1_columm):
                 result[i][j]+=mat1[i][k]*mat2[k][j]
             if result[i][j]>0:
                 result[i][j]=1
