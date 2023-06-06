@@ -1,6 +1,6 @@
 from util import *
 from Player import Player
-from Strategy import Strategy
+
 
 G = nx.DiGraph()
 
@@ -17,7 +17,7 @@ G.add_node(player3)
 edge_list = [(player1,player2,{"w": "c1"}),(player2,player1,{"w": "c2"}),(player1,player3,{"w": "s1"}),(player2,player3,{"w": "s2"})]
 G.add_edges_from(edge_list)
 
-preferences = {player1: [(Strategy({"c1", "c2"}, 0), Strategy({"s1"}, 1), Strategy({"c1", "s2"},2))],
+preferences = {player1: [({"c1", "c2"}, {"s1"}, {"c1", "s2"})],
                player2: [{(player2,player1), (player1,player2)}, {(player2,player3)}, {(player2,player1),(player1,player3)}]}
 
 player1.set_preferences(preferences[player1])

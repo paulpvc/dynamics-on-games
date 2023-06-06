@@ -12,19 +12,16 @@ def get_graph(nodes: list, edges: list[tuple]):
     graph.add_edges_from(edges)
     return graph
 
-def outcome(preference: list, strategy: set):
+
+def outcome(preference: nx.DiGraph, strategy: set, strategy2: set):
     """
     calcul du gain pour la stratégie donnée en fonction de la préférence du joueur donnée (key)
-    :param preferences: préférences de tous les joueurs
+    :param preference: préférences de tous les joueurs
     :param strategy: la strategy dont on veut savoir l'outcome
+    :param strategy2: la 2ème stratégie
     :return: int: outcome de la stratégie
     """
-    for j in range(len(preference)):
-        pref = preference[j]
-        if pref.issubset(strategy):
-            return j
-    return -1
-
+    return preference.has_edge(strategy, strategy2)
 
 def get_edge_name(edges: set, G: nx.DiGraph):
     res = ""
@@ -80,31 +77,31 @@ def get_strategy_profiles(graph: nx.DiGraph):
     strategy_profiles = [set(strategy_profile) for strategy_profile in (product(*players_actions.values()))]
     return strategy_profiles
 
-def get_preferencce_edges(preference):
+def get_dict_index(strat: set, pref_dict: dict):
+    for id, strat_temp in pref_dict.items():
+        if strat == strat_temp:
+            return id
+    return -1
+
+def get_preference_edges(preference, pref_dict: dict):
     arcs = []
     for pref_tuple in preference:
         for i in range(len(pref_tuple)-1):
-            arc = (pref_tuple[i].id, pref_tuple[i+1].id)
+            arc = (get_dict_index(pref_tuple[i], pref_dict), get_dict_index(pref_tuple[i+1], pref_dict))
             arcs.append(arc)
     return arcs
 
 
-"""def get_nodes_of_dynamic_graph(graph: nx.DiGraph):
-    nodes = []
-    my_list = []
-    strategy_profiles = get_strategy_profiles(graph)
-    for strategy_profile in strategy_profiles:
-        node_label_content = []
-        set_of_edges_label = set()
-        for player_strategy in strategy_profile:
-            temp = graph.get_edge_data(*player_strategy)["w"]
-            node_label_content.append(temp)
-            set_of_edges_label.add(temp)
-        nodes.append(''.join(node_label_content))
-        my_list.append(set_of_edges_label)
+def get_dict_preference(preferences: list):
+    resultat = dict()
+    count = 0
+    for tpl in preferences:
+        for strat in tpl:
+            if strat not in resultat.values():
+                resultat[count] = strat
+                count +=1
+    return resultat
 
-    return nodes, my_list
-"""
 
 def affichage(G, title=""):
     """
@@ -184,7 +181,7 @@ def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: d
     current_path.pop(-1)
     id_dict[source] = -1
     return []
-# pour de l affichage il suffit de récupérer les edge_data pour obtenir les noms des arcs et pouvoir les plots comme il faut
+
 
 def get_product_matrix(mat1,mat2):
     mat1_row = len(mat1)
