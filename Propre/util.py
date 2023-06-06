@@ -188,10 +188,13 @@ def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: d
 
 
 def get_final_matrix(m: np.ndarray):
-    square_of_m = m**2
+    square_of_m = m @ m
+    print(square_of_m)
     while(not np.array_equal(m,square_of_m)):
+
         m = square_of_m
-        square_of_m = np.matmul(square_of_m,square_of_m)
+        square_of_m = m @ m
+        print(square_of_m)
     return m
 
 
