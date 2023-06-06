@@ -13,21 +13,28 @@ def get_graph(nodes: list, edges: list[tuple]):
     return graph
 
 
-def outcome(preference: nx.DiGraph, pref_dict: dict, strategy: set, strategy2: set):
-
-    ids = [-1, -1]
+def outcome(G: nx.DiGraph, preference: nx.DiGraph, strategy: set, strategy2: set):
+    strategy = get_edge_name_set(strategy, G)
+    strategy2 = get_edge_name_set(strategy2, G)
+    ids = [None, None]
     strats = [strategy,strategy2]
-    for i in preference.nodes():
+    for pref_strat in preference.nodes():
         for strat_i in range(len(strats)):
-            if pref_dict[i].issubset(strats[strat_i]):
+            if pref_strat.strategy.issubset(strats[strat_i]):
                 strats.pop(strat_i)
-                ids[strat_i] = i
+                ids[strat_i] = pref_strat
                 break
         if len(strats) == 0:
             break
     if len(strats) > 0:
         return False
     return preference.has_edge(ids[0], ids[1])
+
+def get_edge_name_set(edges: set, G: nx.DiGraph):
+    res = set()
+    for edge in edges:
+        res.add(G.get_edge_data(*edge)["w"])
+    return res
 
 def get_edge_name(edges: set, G: nx.DiGraph):
     res = ""
