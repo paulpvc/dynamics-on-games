@@ -196,6 +196,7 @@ def get_final_matrix(m: np.ndarray):
 
 
 
+
 def find_dw(G: nx.DiGraph):
     cycles = loop_get_cycles(G)
     for cycle in cycles:
