@@ -12,16 +12,16 @@ class GraphP1:
         dyna_P1 = nx.DiGraph()
         for strategy1 in self.strategies_profiles:
             for strategy2 in self.strategies_profiles:
-                if self.is_edge(strategy1, strategy2):
+                if self.is_edge(strategy1, strategy2, self.G):
                     dyna_P1.add_edge(get_edge_name(strategy1, self.G), get_edge_name(strategy2, self.G))
         return dyna_P1
 
     @staticmethod
-    def is_edge(node1, node2):
+    def is_edge(node1, node2, G:nx.DiGraph):
         difference = node1.difference(node2)
         if len(difference) == 1:
             player = difference.pop()[0]
-            if outcome(player.preference, node1) < outcome(player.preference, node2):
+            if outcome(G, player.preference, node1, node2):
                 return True
         return False
 

@@ -31,7 +31,7 @@ class GraphPC:
             other_players_actions = node1.difference(player_edges)
             if len(player_update) == 1:
                 other_players_actions.add(*player_update)
-                if GraphP1.is_edge(node1, other_players_actions):
+                if GraphP1.is_edge(node1, other_players_actions, G):
                     counter += 1
                 other_players_actions.discard(*player_update)
         if counter == nb_player_updating_their_strategy:
