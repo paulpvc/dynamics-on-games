@@ -16,7 +16,6 @@ def get_graph(nodes: list, edges: list[tuple]):
 def outcome(G: nx.DiGraph, preference: nx.DiGraph, strategy: set, strategy2: set):
     strategy = get_edge_name_set(strategy, G)
     strategy2 = get_edge_name_set(strategy2, G)
-    print(strategy, strategy2)
     ids = [None, None]
     strats = [strategy,strategy2]
     for pref_strat in preference.nodes():
@@ -26,7 +25,6 @@ def outcome(G: nx.DiGraph, preference: nx.DiGraph, strategy: set, strategy2: set
                 break
         if len(strats) == 0:
             break
-    print(ids)
     if ids[0] is None and ids[1] is not None:
         return True
     elif ids[1] is None and ids[0] is not None:
