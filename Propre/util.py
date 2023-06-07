@@ -6,6 +6,7 @@ import numpy as np
 
 
 
+
 def get_graph(nodes: list, edges: list[tuple]):
     graph = nx.DiGraph()
     graph.add_nodes_from(nodes)
@@ -244,3 +245,10 @@ def find_dw(G: nx.DiGraph):
                     if count == 2:
                         return True
     return False
+
+
+def sdw_1TG(G: nx.DiGraph, graph_PC=None):
+    if graph_PC is None:
+        graph_PC = GraphPC(G, get_strategy_profiles(G))
+
+    return not graph_PC.does_terminate()
