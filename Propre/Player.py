@@ -10,7 +10,6 @@ class Player:
 
     def set_preferences(self, preference):
         self.pref_dict = get_dict_preference(preference)
-
         matrix = get_preference_edges(preference, self.pref_dict)
 
 
