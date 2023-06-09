@@ -41,5 +41,8 @@ class GraphPC:
     def does_terminate(self):
         return not loop_cycle_detection(self.graph_dyna)
 
+    def sdw_1TG(self):
+        return not self.does_terminate()
+
 
 

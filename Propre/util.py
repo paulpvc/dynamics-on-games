@@ -3,7 +3,7 @@ import my_networkx as my_nx
 import matplotlib.pyplot as plt
 from itertools import product
 import numpy as np
-
+from Pile import Pile
 
 
 
@@ -247,8 +247,36 @@ def find_dw(G: nx.DiGraph):
     return False
 
 
-def sdw_1TG(G: nx.DiGraph, graph_PC=None):
-    if graph_PC is None:
-        graph_PC = GraphPC(G, get_strategy_profiles(G))
+def dfs_kosaraju_stack(G, node, seen:dict, stack):
+    seen[node] = True
+    for n in G.neighbors(node):
+        if not seen[n]:
+            dfs_kosaraju_stack(G, n, seen, stack)
+    stack.push(node)
 
-    return not graph_PC.does_terminate()
+
+def dfs_kosaraju_list(G, node, seen, scc):
+    seen[node] = True
+    for n in G.neighbors(node):
+        if not seen[n]:
+            dfs_kosaraju_list(G, node, seen, scc)
+    scc.append(node)
+
+
+def kosaraju(G: nx.DiGraph):
+    stack = Pile()
+    seen = {n: False for n in G.nodes()}
+    for node in G.nodes():
+        if not seen[node]:
+            dfs_kosaraju_stack(G, node, seen, stack)
+
+    transpose = G.reverse()
+    seen = {n: False for n in G.nodes()}
+    scc_list = []
+    while not stack.is_empty():
+        node = stack.pull()
+        scc = []
+        if not seen[node]:
+            dfs_kosaraju_list(transpose, node, seen, scc)
+            scc_list.append(scc)
+    return scc_list
