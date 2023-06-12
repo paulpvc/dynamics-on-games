@@ -72,7 +72,7 @@ def visit_node_in_dfs_for_kosaraju(node,G: nx.DiGraph,parents:dict,color:dict,co
             visit_node_in_dfs_for_kosaraju(successor, G,parents,color,component)
     color[node] = "b"
 
-def depth_first_search_for_kosaraju(G:nx.DiGraph,treatment_end_date:dict):
+def depth_first_search_for_kosaraju(G:nx.DiGraph, treatment_end_date:dict):
     color = {node: "w" for node in list(G.nodes())}
     parents = {node: None for node in list(G.nodes)}
     connected_components = []
