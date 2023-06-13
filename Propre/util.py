@@ -229,22 +229,43 @@ def get_final_matrix(m: np.ndarray):
         square_of_m = get_product_matrix(square_of_m,square_of_m)
     return m
 
+def pull_max_pref(player, label):
+    max_pref = None
+    for strategy in player.preference:
+        if label in strategy.strategy:
+            if max_pref is None or player.preference[max_pref] < player.preference[strategy]:
+                max_pref = strategy
+    return max_pref
 
+
+def stuck_in_cycle(G: nx.DiGraph, cycle: list, player):
+    d = {p[2]: p[:2] for p in G.edges.data(nbunch=player, data="w", default="")}
+    max_out, max_in = 0, 0
+    for label in d:
+        temp = pull_max_pref(player, label)
+        if d[label][1] in cycle:
+            if player.preference[temp] > max_in:
+                max_in = player.preference[temp]
+        else:
+            if player.preference[temp] > max_out:
+                max_out = player.preference[temp]
+    return max_in > max_out #ambiguité si équivalence entre les chemins, on suppose que il va sortir si possible
 
 
 def find_dw(G: nx.DiGraph):
     cycles = loop_get_cycles(G)
-    for cycle in cycles:
-        count = 0
-        for source in cycle:
-            for node in G.neighbors(source):
-                seen = {n: False for n in G.nodes()}
 
-                if dfs(G, node, seen, cycle):
-                    count += 1
-                    if count == 2:
-                        return True
+    for cycle in cycles:
+        dw = True
+        for player in cycle:
+            if not stuck_in_cycle(G, cycle, player):
+                dw = False
+                break
+        if dw:
+            return True
     return False
+
+
 
 
 def dfs_kosaraju_stack(G, node, seen:dict, stack):
