@@ -306,6 +306,11 @@ def kosaraju(G: nx.DiGraph):
     return scc_list
 
 
+def give_score_to_node(G:nx.DiGraph):
+
+    pass
+
+
 def is_fair_cycle(dyna_G: nx.DiGraph, cycle: list):
     for strategy in cycle:
         if dyna_G.out_degree(strategy) > 1:
