@@ -33,6 +33,9 @@ def outcome(G: nx.DiGraph, preference: nx.DiGraph, strategy: set, strategy2: set
 
     return preference.has_edge(ids[0], ids[1])
 
+    """changer preferenc pour player(enleverG)
+    return player.preference[strategy] <= player.preference[strategy2]"""
+
 def get_edge_name_set(edges: set, G: nx.DiGraph):
     res = set()
     for edge in edges:
@@ -301,3 +304,11 @@ def kosaraju(G: nx.DiGraph):
             dfs_kosaraju_list(transpose, node, seen, scc)
             scc_list.append(scc)
     return scc_list
+
+
+def is_fair_cycle(dyna_G: nx.DiGraph, cycle: list):
+    for strategy in cycle:
+        if dyna_G.out_degree(strategy) > 1:
+            return False
+    return True
+

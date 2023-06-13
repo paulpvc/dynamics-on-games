@@ -44,5 +44,12 @@ class GraphPC:
     def sdw_1TG(self):
         return not self.does_terminate()
 
+    def contain_fair_cycle(self):
+        cycles = loop_get_cycles(self.graph_dyna)
+        for cycle in cycles:
+            if not is_fair_cycle(self.graph_dyna, cycle):
+                return False
+        return True
+
 
 
