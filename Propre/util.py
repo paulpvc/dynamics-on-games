@@ -14,7 +14,8 @@ def get_graph(nodes: list, edges: list[tuple]):
     return graph
 
 
-def outcome(G: nx.DiGraph, preference: nx.DiGraph, strategy: set, strategy2: set):
+def outcome(G: nx.DiGraph, player, strategy: set, strategy2: set):
+    """
     strategy = get_edge_name_set(strategy, G)
     strategy2 = get_edge_name_set(strategy2, G)
     ids = [None, None]
@@ -31,10 +32,8 @@ def outcome(G: nx.DiGraph, preference: nx.DiGraph, strategy: set, strategy2: set
     elif ids[1] is None and ids[0] is not None:
         return False
 
-    return preference.has_edge(ids[0], ids[1])
+    return preference.has_edge(ids[0], ids[1])"""
 
-    """changer preferenc pour player(enleverG)
-    return player.preference[strategy] <= player.preference[strategy2]"""
 
 def get_edge_name_set(edges: set, G: nx.DiGraph):
     res = set()
@@ -102,28 +101,16 @@ def get_dict_index(strat: set, pref_dict: dict):
             return id
     return -1
 
-def get_preference_edges(preference, pref_dict: dict):
-    arcs = [[0]*len(pref_dict) for _ in range(len(pref_dict))]
+def get_preference_edges(preference):
+    arcs = []
     for pref_tuple in preference:
         for i in range(len(pref_tuple)-1):
-            id_x = pref_dict[pref_tuple[i]]
-            id_y = pref_dict[pref_tuple[i+1]]
-            arcs[id_x][id_y] = 1
-            """arc = (get_dict_index(pref_tuple[i], pref_dict), get_dict_index(pref_tuple[i+1], pref_dict))
-            arcs.append(arc)"""
+            arc = (pref_tuple[i], pref_tuple[i+1])
+            arcs.append(arc)
     return arcs
 
 
-def get_dict_preference(preferences: list):
-    resultat = dict()
-    count = 0
-    for tpl in preferences:
 
-        for strat in tpl:
-            if strat not in resultat:
-                resultat[strat] = count
-                count +=1
-    return resultat
 
 
 def affichage(G, title=""):

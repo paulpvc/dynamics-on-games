@@ -48,7 +48,7 @@ def test1(lst):
     print("terminaison de bP1: " + str(graph_bp1.does_terminate()))
     print("terminaison de PC: " + str(graph_pc.does_terminate()))
     print("terminaison de bPC: " + str(graph_bpc.does_terminate()))
-    print("présence d'une SDW: " + str(sdw_1TG(G, graph_pc)))
+    #print("présence d'une SDW: " + str(sdw_1TG(G, graph_pc)))
     """
     affichage_dyna(graph_p1.graph_dyna, "P1")"""
     
@@ -87,7 +87,7 @@ def test2(lst):
     print("terminaison de bP1: " + str(graph_bp1.does_terminate()))
     print("terminaison de PC: " + str(graph_pc.does_terminate()))
     print("terminaison de bPC: " + str(graph_bpc.does_terminate()))
-    print("présence d'une SDW: " + str(sdw_1TG(G, graph_pc)))
+    #print("présence d'une SDW: " + str(sdw_1TG(G, graph_pc)))
     #affichage_dyna(graph_pc.graph_dyna, "PC")
 
 test2(lst)

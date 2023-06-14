@@ -7,16 +7,7 @@ from util import get_graph,affichage_dyna
 from LinkedList import *
 
 
-date = 0
-color = {}
 
-
-nodes = [1,2,3,4,5,6,7,]
-edges = [(1,2),(2,3),(3,4),(4,1),(2,5),(5,6),(6,5),(5,7),(3,5)]
-G = get_graph(nodes,edges)
-
-c = {(2,5):"polo"}
-print(c[(2,5)])
 
 
 def visit_node_in_dfs(node, G:nx.DiGraph, color: dict,parents: dict, discovery_date:dict, treatment_end_date:dict,back_edges:set,forward_and_cross_edges:set,liaison):
@@ -146,16 +137,19 @@ def score(G:nx.DiGraph):
     return score
 
 
-print(depth_first_search(G.reverse()))
+if __name__ =="__main__":
+    date = 0
+    color = {}
 
+    nodes = [1, 2, 3, 4, 5, 6, 7, ]
+    edges = [(1, 2), (2, 3), (3, 4), (4, 1), (2, 5), (5, 6), (6, 5), (5, 7), (3, 5)]
+    G = get_graph(nodes, edges)
 
-print(get_connected_components_graph(G))
-print(topological_sorting(get_connected_components_graph(G)[0]))
-#affichage_dyna(get_connected_components_graph(G),"composante")
+    c = {(2, 5): "polo"}
+    print(c[(2, 5)])
+    print(depth_first_search(G.reverse()))
 
-
-
-
-
-
+    print(get_connected_components_graph(G))
+    print(topological_sorting(get_connected_components_graph(G)[0]))
+    # affichage_dyna(get_connected_components_graph(G),"composante")
 
