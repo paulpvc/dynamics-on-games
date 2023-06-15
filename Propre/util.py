@@ -14,9 +14,10 @@ def get_graph(nodes: list, edges: list[tuple]):
     return graph
 
 
-def outcome(player, strategy: set):
+def outcome(player, strategy: set, G: nx.DiGraph):
+    temp_strat = get_edge_name_set(strategy, G)
     for preference in player.preference:
-        if preference.strategy.issubset(strategy):
+        if preference.strategy.issubset(temp_strat):
             return player.preference[preference]
     return -1
 

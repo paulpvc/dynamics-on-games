@@ -23,7 +23,7 @@ class GraphP1:
         if len(difference) == 1:
             player = difference.pop()[0]
 
-            if outcome(player, node1) < outcome(player, node2):
+            if outcome(player, node1, G) < outcome(player, node2, G):
                 return True
         return False
 
