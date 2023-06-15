@@ -3,28 +3,32 @@ import networkx as nx
 from Graph_P1 import GraphP1
 
 class GraphbP1:
-    def __init__(self, G: nx.DiGraph, strategies_profiles: list[set]):
+    def __init__(self, G: nx.DiGraph, strategies_profiles: tuple):
         self.G = G
         self.strategies_profiles = strategies_profiles
         self.graph_dyna = self.create_dyna()
 
     def create_dyna(self):
         dyna_bP1 = nx.DiGraph()
-        for strategy1 in self.strategies_profiles:
-            best_reply = self.get_best_strategy(self, strategy1)
+        for id_strat_source in range(len(self.strategies_profiles[1])):
+            strategy_source = self.strategies_profiles[1][id_strat_source]
+            best_reply = self.get_best_strategy(self, id_strat_source)
             for better_strategy in best_reply.values():
                 if better_strategy is not None:
-                    dyna_bP1.add_edge(get_edge_name(strategy1, self.G), get_edge_name(better_strategy, self.G))
+                    dyna_bP1.add_edge(self.strategies_profiles[0][id_strat_source], get_edge_name(better_strategy, self.G))
         return dyna_bP1
 
     @staticmethod
-    def get_best_strategy(self, strategy):
+    def get_best_strategy(self, id_strat_source):
+        strategy_source = self.strategies_profiles[2][id_strat_source]
         best_reply = {n: None for n in self.G.nodes()}
-        for strategy2 in self.strategies_profiles:
-            if GraphP1.is_edge(strategy, strategy2, self.G):
-                player = strategy.difference(strategy2).pop()[0]
-                if best_reply[player] is None or outcome(player, best_reply[player], self.G) < outcome(player, strategy2, self.G):
-                    best_reply[player] = strategy2
+        for id_strat_target in range(len(self.strategies_profiles[1])):
+            strategy_target = self.strategies_profiles[2][id_strat_target]
+            if GraphP1.is_edge(id_strat_source, id_strat_target, self):
+                player = strategy_source.difference(strategy_target).pop()[0]
+                strategy_target_name = self.strategies_profiles[1][id_strat_target]
+                if best_reply[player] is None or outcome(player, best_reply[player]) < outcome(player, strategy_target_name):
+                    best_reply[player] = strategy_target
         return best_reply
 
 

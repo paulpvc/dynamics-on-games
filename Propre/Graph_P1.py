@@ -4,26 +4,30 @@ import networkx as nx
 
 
 class GraphP1:
-    def __init__(self, G: nx.DiGraph, strategies_profiles: list[set]):
+    def __init__(self, G: nx.DiGraph, strategies_profiles: tuple):
         self.G = G
         self.strategies_profiles = strategies_profiles
         self.graph_dyna = self.create_dyna()
 
     def create_dyna(self):
         dyna_P1 = nx.DiGraph()
-        for strategy1 in self.strategies_profiles:
-            for strategy2 in self.strategies_profiles:
-                if self.is_edge(strategy1, strategy2, self.G):
-                    dyna_P1.add_edge(get_edge_name(strategy1, self.G), get_edge_name(strategy2, self.G))
+        for id_strat_source in range(len(self.strategies_profiles[1])):
+            strategy_source = self.strategies_profiles[2][id_strat_source]
+            for id_strat_target in range(len(self.strategies_profiles[1])):
+                strategy_target = self.strategies_profiles[2][id_strat_target]
+                if self.is_edge(strategy_source, strategy_target, self):
+                    #dyna_P1.add_edge(strategy_source, get_edge_name(strategy_target, self.G))
+                    dyna_P1.add_edge(self.strategies_profiles[0][id_strat_source], self.strategies_profiles[0][id_strat_target])
         return dyna_P1
 
     @staticmethod
-    def is_edge(node1, node2, G:nx.DiGraph):
-        difference = node1.difference(node2)
+    def is_edge(strategy_source, strategy_target, self): # TODO: prob de pc
+        difference = strategy_source.difference(strategy_target)
         if len(difference) == 1:
             player = difference.pop()[0]
+            #print(player)
 
-            if outcome(player, node1, G) < outcome(player, node2, G):
+            if outcome(player, self.strategies_profiles[1][id_strat_source]) < outcome(player, self.strategies_profiles[1][id_strat_target]):
                 return True
         return False
 

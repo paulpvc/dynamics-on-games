@@ -13,6 +13,7 @@ class Player:
         self.preference.add_edges_from(arcs)
         affichage_dyna(self.preference, "rjdfodg")
         self.preference = score(self.preference)
+        print("score: ",self.preference)
 
     def __repr__(self):
         return str(self.name)

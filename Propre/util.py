@@ -14,11 +14,15 @@ def get_graph(nodes: list, edges: list[tuple]):
     return graph
 
 
-def outcome(player, strategy: set, G: nx.DiGraph):
-    temp_strat = get_edge_name_set(strategy, G)
+def outcome(player, strategy: set):
+
+    #temp_strat = get_edge_name_set(strategy, G)
     for preference in player.preference:
-        if preference.strategy.issubset(temp_strat):
+
+        if preference.strategy.issubset(strategy):
+            #rint(preference.strategy, strategy, player.preference[preference])
             return player.preference[preference]
+
     return -1
 
 
@@ -79,7 +83,7 @@ def get_strategy_profiles(graph: nx.DiGraph):
     for node in list(graph.nodes):
         if graph.out_degree[node] > 0:
             players_actions[node] = list(graph.edges([node]))
-    strategy_profiles = [set(strategy_profile) for strategy_profile in (product(*players_actions.values()))]
+    strategy_profiles = [strategy_profile for strategy_profile in (product(*players_actions.values()))]
     return strategy_profiles
 
 def get_dict_index(strat: set, pref_dict: dict):
@@ -172,6 +176,7 @@ def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: d
         if not seen[node]:
             temp = get_cycles(G, node, seen, current_path, id_dict)
             if len(temp) > 0:
+                print(temp)
                 return temp
         elif id_dict[node] > -1:
             return current_path[id_dict[node]:]
@@ -243,54 +248,13 @@ def find_dw(G: nx.DiGraph):
     return False
 
 
-
-
-def dfs_kosaraju_stack(G, node, seen:dict, stack):
-    seen[node] = True
-    for n in G.neighbors(node):
-        if not seen[n]:
-            dfs_kosaraju_stack(G, n, seen, stack)
-    stack.push(node)
-
-
-def dfs_kosaraju_list(G, node, seen, scc):
-    seen[node] = True
-    for n in G.neighbors(node):
-        if not seen[n]:
-            dfs_kosaraju_list(G, node, seen, scc)
-    scc.append(node)
-
-
-def kosaraju(G: nx.DiGraph):
-    stack = Pile()
-    seen = {n: False for n in G.nodes()}
-    for node in G.nodes():
-        if not seen[node]:
-            dfs_kosaraju_stack(G, node, seen, stack)
-
-    transpose = G.reverse()
-    seen = {n: False for n in G.nodes()}
-    scc_list = []
-    while not stack.is_empty():
-        node = stack.pull()
-        scc = []
-        if not seen[node]:
-            dfs_kosaraju_list(transpose, node, seen, scc)
-            scc_list.append(scc)
-    return scc_list
-
-
-def give_score_to_node(G:nx.DiGraph):
-
-    pass
-
-
 def is_fair_cycle(dyna_G: nx.DiGraph, cycle: list):
     for strategy in cycle:
-        if dyna_G.out_degree(strategy) > 1:
+        #print(strategy, dyna_G.out_degree(strategy))
+        if dyna_G.out_degree(strategy)[1] > 1:
+
             return False
     return True
-
 
 
 def get_nodes_of_dynamic_graph(graph:nx.DiGraph):
@@ -298,7 +262,7 @@ def get_nodes_of_dynamic_graph(graph:nx.DiGraph):
     set_of_edges_label = set()
     my_list = []
     node_label_content = []
-    strategy_profiles = get_strategy_profiles(graph)
+    strategy_profiles = list(map(set,get_strategy_profiles(graph)))
     for strategy_profile in strategy_profiles:
         for player_strategy in strategy_profile:
             temp = graph.get_edge_data(*player_strategy)["w"]

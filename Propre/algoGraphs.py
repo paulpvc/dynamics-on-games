@@ -43,7 +43,7 @@ def depth_first_search(G:nx.DiGraph):
     for node in list(G.nodes()):
         if color[node] == "w":
             visit_node_in_dfs(node,G,color,parents,discovery_date, treatment_end_date,back_edges,forward_and_cross_edges,liaison)
-    print(forward_and_cross_edges)
+    #print(forward_and_cross_edges)
 
     return {"parents":parents,
             "discovery_date":discovery_date,
@@ -85,15 +85,15 @@ def depth_first_search_for_kosaraju(G:nx.DiGraph, treatment_end_date:dict):
     liaison = set()
     forward_and_cross_edges = set()
     sorted_desc_treatment_end_date = dict(sorted(treatment_end_date.items(),key=lambda item: item[1],reverse=True))
-    print(sorted_desc_treatment_end_date)
+    #print(sorted_desc_treatment_end_date)
     for node in sorted_desc_treatment_end_date:
         if color[node] == "w":
             component = [node]
             id+=1
             visit_node_in_dfs_for_kosaraju(node,G,parents,color,component,liaison,forward_and_cross_edges)
             connected_components[id] = component
-            print(component)
-            print(forward_and_cross_edges)
+            #print(component)
+            #print(forward_and_cross_edges)
     return [connected_components, forward_and_cross_edges]
 
 
@@ -101,16 +101,16 @@ def kokosaraju(G:nx.DiGraph):
     infos = depth_first_search(G)
     treatment_end_date = infos["treatment_end_date"]
     forward_and_cross_edges = infos["forward_and_cross_edges"]
-    print(treatment_end_date)
+    #print(treatment_end_date)
     transpose = G.reverse()
-    print(transpose)
+    #print(transpose)
     return depth_first_search_for_kosaraju(transpose,treatment_end_date)
 
 
 def get_connected_components_graph(G:nx.DiGraph):
     connected_components_graph = nx.DiGraph()
     connected_components,edges = kokosaraju(G)
-    print(connected_components)
+    #print(connected_components)
     connected_components_graph.add_nodes_from(list(connected_components.keys()))
     new_edges = []
     for i in connected_components.keys():
