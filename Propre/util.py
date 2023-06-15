@@ -291,3 +291,23 @@ def is_fair_cycle(dyna_G: nx.DiGraph, cycle: list):
             return False
     return True
 
+
+
+def get_nodes_of_dynamic_graph(graph:nx.DiGraph):
+    nodes = []
+    set_of_edges_label = set()
+    my_list = []
+    node_label_content = []
+    strategy_profiles = get_strategy_profiles(graph)
+    for strategy_profile in strategy_profiles:
+        for player_strategy in strategy_profile:
+            temp = graph.get_edge_data(*player_strategy)["w"]
+            node_label_content.append(temp)
+            set_of_edges_label.add(temp)
+        nodes.append(''.join(node_label_content))
+        my_list.append(set_of_edges_label)
+        node_label_content = []
+        set_of_edges_label = set()
+    return nodes,my_list,strategy_profiles
+
+
