@@ -15,6 +15,7 @@ def get_graph(nodes: list, edges: list[tuple]):
 
 
 def outcome(G: nx.DiGraph, player, strategy: set, strategy2: set):
+    print("dsv", type(list(player.preference.keys())[0]))
     """
     strategy = get_edge_name_set(strategy, G)
     strategy2 = get_edge_name_set(strategy2, G)
@@ -104,13 +105,13 @@ def get_dict_index(strat: set, pref_dict: dict):
 def get_preference_edges(preference):
     arcs = []
     for pref_tuple in preference:
-        for i in range(len(pref_tuple)-1):
-            arc = (pref_tuple[i], pref_tuple[i+1])
-            arcs.append(arc)
+        if len(pref_tuple) == 1:
+            arcs.append((pref_tuple[0], pref_tuple[0]))
+        else:
+            for i in range(len(pref_tuple)-1):
+                arc = (pref_tuple[i], pref_tuple[i+1])
+                arcs.append(arc)
     return arcs
-
-
-
 
 
 def affichage(G, title=""):

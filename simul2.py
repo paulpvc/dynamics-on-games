@@ -82,17 +82,13 @@ def get_edges_of_dynamic_PC_graph(graph: nx.DiGraph, preferences,players):
 def is_edge_in_pc(node1,node2,players:dict,pref):
 
     player_updating_their_strategy_actions = node2.difference(node1)
-    print("Joueurs changeant de stratégies(actions)",player_updating_their_strategy_actions)
     player_updating_their_strategy = len(player_updating_their_strategy_actions)
-    print("Nombre",player_updating_their_strategy)
     counter = 0
     for player in players:
         player_update = players[player].intersection(player_updating_their_strategy_actions)
         other_players_actions = node1.difference(players[player])
-        print("autres actions",other_players_actions)
         if len(player_update)== 1:
                 other_players_actions.add(*player_update)
-                print(other_players_actions)
                 if  is_edge_in_P1(node1,other_players_actions ,player,pref[player-1]):
                     counter+=1
                 other_players_actions.discard(*player_update)
@@ -133,11 +129,12 @@ affichage_dyna(graph3)
 
 print(get_strategy_profiles(graph1))"""
 
+print(get_nodes_of_dynamic_graph(graph1))
 
-graph4 = get_graph(get_nodes_of_dynamic_graph(graph1)[0],get_edges_of_dynamic_PC_graph(graph1,preferences,players))
+"""graph4 = get_graph(get_nodes_of_dynamic_graph(graph1)[0],get_edges_of_dynamic_PC_graph(graph1,preferences,players))
 graph5 = get_graph(get_nodes_of_dynamic_graph(graph1)[0],get_edges_of_dynamic_P1_graph(graph1,preferences))
 affichage_dyna(graph4,"pc")
-#print(get_strategy_profiles(graph1))
+"""#print(get_strategy_profiles(graph1))
 """print(is_edge_in_pc({"c1","c2","c3"},{"s1","s2","s3"},players,preferences))
 print(is_edge_in_P1({"c1","c2","c3"},{"s1","c2","c3"},1,preferences[0]))"""
 

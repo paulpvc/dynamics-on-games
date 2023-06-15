@@ -22,7 +22,8 @@ class GraphP1:
         difference = node1.difference(node2)
         if len(difference) == 1:
             player = difference.pop()[0]
-            if outcome(G, player.preference, node1, node2):
+            print(player.preference.items())
+            if outcome(G, player, node1, node2):
                 return True
         return False
 
