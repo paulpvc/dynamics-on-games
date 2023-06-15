@@ -16,7 +16,7 @@ def get_graph(nodes: list, edges: list[tuple]):
 
 def outcome(player, strategy: set):
     for preference in player.preference:
-        if preference.issubset(strategy):
+        if preference.strategy.issubset(strategy):
             return player.preference[preference]
     return -1
 
