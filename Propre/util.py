@@ -14,26 +14,11 @@ def get_graph(nodes: list, edges: list[tuple]):
     return graph
 
 
-def outcome(G: nx.DiGraph, player, strategy: set, strategy2: set):
-    print("dsv", type(list(player.preference.keys())[0]))
-    """
-    strategy = get_edge_name_set(strategy, G)
-    strategy2 = get_edge_name_set(strategy2, G)
-    ids = [None, None]
-    strats = [strategy,strategy2]
-    for pref_strat in preference.nodes():
-        for strat_i in range(len(strats)):
-            if pref_strat.strategy.issubset(strats[strat_i]):
-                ids[strat_i] = pref_strat
-                break
-        if len(strats) == 0:
-            break
-    if ids[0] is None and ids[1] is not None:
-        return True
-    elif ids[1] is None and ids[0] is not None:
-        return False
-
-    return preference.has_edge(ids[0], ids[1])"""
+def outcome(player, strategy: set):
+    for preference in player.preference:
+        if preference.issubset(strategy):
+            return player.preference[preference]
+    return -1
 
 
 def get_edge_name_set(edges: set, G: nx.DiGraph):

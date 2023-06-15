@@ -23,7 +23,7 @@ class GraphbP1:
         for strategy2 in self.strategies_profiles:
             if GraphP1.is_edge(strategy, strategy2, self.G):
                 player = strategy.difference(strategy2).pop()[0]
-                if best_reply[player] is None or outcome(self.G, player, best_reply[player], strategy2):
+                if best_reply[player] is None or outcome(player, best_reply[player]) < outcome(player, strategy2):
                     best_reply[player] = strategy2
         return best_reply
 
