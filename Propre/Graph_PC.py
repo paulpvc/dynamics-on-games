@@ -4,34 +4,37 @@ from Graph_P1 import GraphP1
 
 
 class GraphPC:
-    def __init__(self, G: nx.DiGraph, strategies_profiles: list[set]):
+    def __init__(self, G: nx.DiGraph, strategies_profiles: tuple):
         self.G = G
         self.strategies_profiles = strategies_profiles
         self.graph_dyna = self.create_dyna()
 
     def create_dyna(self):
         dyna_PC = nx.DiGraph()
-        for strategy1 in self.strategies_profiles:
-            for strategy2 in self.strategies_profiles:
-                if self.is_edge(self.G, strategy1, strategy2):
-                    dyna_PC.add_edge(get_edge_name(strategy1, self.G), get_edge_name(strategy2, self.G))
+        for id_strat_source in range(len(self.strategies_profiles[1])):
+            for id_strat_target in range(len(self.strategies_profiles[1])):
+                if self.is_edge(self, id_strat_source, id_strat_target):
+                    dyna_PC.add_edge(self.strategies_profiles[0][id_strat_source], self.strategies_profiles[0][id_strat_target])
         return dyna_PC
 
     @staticmethod
-    def is_edge(G, node1, node2):
-        if node1 == node2:
+    def is_edge(self, id_strat_source, id_strat_target):
+        strategy_source = self.strategies_profiles[2][id_strat_source]
+        strategy_target = self.strategies_profiles[2][id_strat_target]
+        if strategy_source == strategy_target:
             return False
-        players = list(filter(lambda x: (G.out_degree[x] > 0), G.nodes))
-        player_updating_their_strategy_actions = node2.difference(node1)
+        players = list(filter(lambda x: (self.G.out_degree[x] > 0), self.G.nodes))
+        player_updating_their_strategy_actions = strategy_target.difference(strategy_source)
         nb_player_updating_their_strategy = len(player_updating_their_strategy_actions)
         counter = 0
         for player in players:
-            player_edges = set(G.edges([player]))
+            player_edges = set(self.G.edges([player]))
+            #print(player_edges)
             player_update = player_edges.intersection(player_updating_their_strategy_actions)
-            other_players_actions = node1.difference(player_edges)
+            other_players_actions = strategy_source.difference(player_edges)
             if len(player_update) == 1:
                 other_players_actions.add(*player_update)
-                if GraphP1.is_edge(node1, other_players_actions, G):
+                if GraphP1.is_edge(id_strat_source, d, self):
                     counter += 1
                 other_players_actions.discard(*player_update)
         if counter == nb_player_updating_their_strategy:

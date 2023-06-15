@@ -26,7 +26,6 @@ class GraphP1:
         if len(difference) == 1:
             player = difference.pop()[0]
             #print(player)
-
             if outcome(player, self.strategies_profiles[1][id_strat_source]) < outcome(player, self.strategies_profiles[1][id_strat_target]):
                 return True
         return False
