@@ -16,14 +16,13 @@ class GraphbPC:
                 strategy_target = self.strategies_profiles[2][id_strat_target]
                 difference = strategy_source.difference(strategy_target)
                 if len(difference) > 0:
-                    if self.is_edge(id_strat_source, strategy_target, difference):
+                    if self.is_edge(strategy_source, strategy_target, difference):
                         dyna_bPC.add_edge(self.strategies_profiles[0][id_strat_source], self.strategies_profiles[0][id_strat_target])
         return dyna_bPC
 
-    def is_edge(self, id_strat_source, strategy_target, difference):
-        strategy_source = self.strategies_profiles[2][id_strat_source]
+    def is_edge(self, strategy_source, strategy_target, difference):
         difference2 = strategy_target.difference(strategy_source)
-        best_bP1 = GraphbP1.get_best_strategy(self, id_strat_source)
+        best_bP1 = GraphbP1.get_best_strategy(self, strategy_source)
         count = 0
         #print(difference, difference2, best_bP1)
         for edge1 in difference:

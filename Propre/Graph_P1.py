@@ -21,12 +21,12 @@ class GraphP1:
         return dyna_P1
 
     @staticmethod
-    def is_edge(strategy_source, strategy_target, self): # TODO: prob de pc
+    def is_edge(strategy_source, strategy_target, self):
         difference = strategy_source.difference(strategy_target)
         if len(difference) == 1:
             player = difference.pop()[0]
             #print(player)
-            if outcome(player, self.strategies_profiles[1][id_strat_source]) < outcome(player, self.strategies_profiles[1][id_strat_target]):
+            if outcome(player, get_edge_name_set(strategy_source, self.G)) < outcome(player, get_edge_name_set(strategy_target, self.G)):
                 return True
         return False
 

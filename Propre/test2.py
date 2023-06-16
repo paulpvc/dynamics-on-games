@@ -82,7 +82,9 @@ def test2(lst):
     graph_p1 = GraphP1(G, nodes_of_dynamique)
     affichage_dyna(graph_p1.graph_dyna, "p1")
     graph_pc = GraphPC(G, nodes_of_dynamique)
+    print("---------------")
     graph_bp1 = GraphbP1(G, nodes_of_dynamique)
+    print("---------------")
     graph_bpc = GraphbPC(G, nodes_of_dynamique)
     lst = [graph_p1, graph_bp1, graph_pc, graph_bpc]
     label = ["P1", "bP1", "PC", "bPC"]

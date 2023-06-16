@@ -34,7 +34,7 @@ class GraphPC:
             other_players_actions = strategy_source.difference(player_edges)
             if len(player_update) == 1:
                 other_players_actions.add(*player_update)
-                if GraphP1.is_edge(id_strat_source, d, self):
+                if GraphP1.is_edge(strategy_source, other_players_actions, self):
                     counter += 1
                 other_players_actions.discard(*player_update)
         if counter == nb_player_updating_their_strategy:

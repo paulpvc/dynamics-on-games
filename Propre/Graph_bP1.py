@@ -11,22 +11,24 @@ class GraphbP1:
     def create_dyna(self):
         dyna_bP1 = nx.DiGraph()
         for id_strat_source in range(len(self.strategies_profiles[1])):
-            strategy_source = self.strategies_profiles[1][id_strat_source]
-            best_reply = self.get_best_strategy(self, id_strat_source)
+            strategy_source = self.strategies_profiles[2][id_strat_source]
+            best_reply = self.get_best_strategy(self, strategy_source)
+            #print(best_reply)
             for better_strategy in best_reply.values():
                 if better_strategy is not None:
                     dyna_bP1.add_edge(self.strategies_profiles[0][id_strat_source], get_edge_name(better_strategy, self.G))
         return dyna_bP1
 
     @staticmethod
-    def get_best_strategy(self, id_strat_source):
-        strategy_source = self.strategies_profiles[2][id_strat_source]
+    def get_best_strategy(self, strategy_source):
         best_reply = {n: None for n in self.G.nodes()}
         for id_strat_target in range(len(self.strategies_profiles[1])):
             strategy_target = self.strategies_profiles[2][id_strat_target]
-            if GraphP1.is_edge(id_strat_source, id_strat_target, self):
+            #print(GraphP1.is_edge(strategy_source, strategy_target, self))
+            if GraphP1.is_edge(strategy_source, strategy_target, self):
                 player = strategy_source.difference(strategy_target).pop()[0]
-                strategy_target_name = self.strategies_profiles[1][id_strat_target]
+                strategy_target_name = get_edge_name_set(strategy_target, self.G)
+                #print(player, best_reply[player], strategy_target_name)
                 if best_reply[player] is None or outcome(player, best_reply[player]) < outcome(player, strategy_target_name):
                     best_reply[player] = strategy_target
         return best_reply
