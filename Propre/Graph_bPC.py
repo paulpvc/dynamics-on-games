@@ -1,11 +1,12 @@
 from util import *
 import networkx as nx
 from Graph_bP1 import GraphbP1
+from GraphDynamic import GraphDynamic
 
-class GraphbPC:
+
+class GraphbPC(GraphDynamic):
     def __init__(self, G: nx.DiGraph, strategies_profiles: tuple):
-        self.G = G
-        self.strategies_profiles = strategies_profiles
+        super().__init__(G, strategies_profiles)
         self.graph_dyna = self.create_dyna()
 
     def create_dyna(self):
@@ -38,12 +39,3 @@ class GraphbPC:
             return True
         return False
 
-    def does_terminate(self):
-        return not loop_cycle_detection(self.graph_dyna)
-
-    def contain_fair_cycle(self):
-        cycles = loop_get_cycles(self.graph_dyna)
-        for cycle in cycles:
-            if not is_fair_cycle(self.graph_dyna, cycle):
-                return False
-        return True

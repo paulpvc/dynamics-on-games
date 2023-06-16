@@ -1,12 +1,11 @@
 from util import *
-
+from GraphDynamic import GraphDynamic
 import networkx as nx
 
 
-class GraphP1:
+class GraphP1(GraphDynamic):
     def __init__(self, G: nx.DiGraph, strategies_profiles: tuple):
-        self.G = G
-        self.strategies_profiles = strategies_profiles
+        super().__init__(G, strategies_profiles)
         self.graph_dyna = self.create_dyna()
 
     def create_dyna(self):
@@ -29,16 +28,6 @@ class GraphP1:
             if outcome(player, get_edge_name_set(strategy_source, self.G)) < outcome(player, get_edge_name_set(strategy_target, self.G)):
                 return True
         return False
-
-    def does_terminate(self):
-        return not loop_cycle_detection(self.graph_dyna)
-
-    def contain_fair_cycle(self):
-        cycles = loop_get_cycles(self.graph_dyna)
-        for cycle in cycles:
-            if not is_fair_cycle(self.graph_dyna, cycle):
-                return False
-        return True
 
 
 
