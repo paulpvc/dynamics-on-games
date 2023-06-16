@@ -16,7 +16,7 @@ lst = [player1, player2, playerB]
 
 
 
-def test1(lst):
+def test1():
     edge_list = [(player1, player2, {"w": "c1"}), (player2, player1, {"w": "c2"}), (player1, playerB, {"w": "s1"}),
                  (player2, playerB, {"w": "s2"})]
 
@@ -37,20 +37,20 @@ def test1(lst):
 
     graph_p1 = GraphP1(G, get_strategy_profiles(G))
     graph_pc = GraphPC(G, get_strategy_profiles(G))
-    graph_bp1 = GraphbP1(G, get_strategy_profiles(G))
-    graph_bpc = GraphbPC(G, get_strategy_profiles(G))
-    lst = [graph_p1, graph_bp1, graph_pc, graph_bpc]
+   # graph_bp1 = GraphbP1(G, get_strategy_profiles(G))
+   # graph_bpc = GraphbPC(G, get_strategy_profiles(G))
+   # lst = [graph_p1, graph_bp1, graph_pc, graph_bpc]
     label = ["P1", "bP1", "PC", "bPC"]
-    for i in range(len(lst)):
+    """for i in range(len(lst)):
         affichage_dyna(lst[i].graph_dyna, label[i])
     print(graph_bpc)
     print("terminaison de P1: " + str(graph_p1.does_terminate()))
     print("terminaison de bP1: " + str(graph_bp1.does_terminate()))
     print("terminaison de PC: " + str(graph_pc.does_terminate()))
     print("terminaison de bPC: " + str(graph_bpc.does_terminate()))
-    #print("présence d'une SDW: " + str(sdw_1TG(G, graph_pc)))
-    """
-    affichage_dyna(graph_p1.graph_dyna, "P1")"""
+    #print("présence d'une SDW: " + str(sdw_1TG(G, graph_pc)))"""
+
+    affichage_dyna(graph_p1.graph_dyna, "P1")
     
 
 

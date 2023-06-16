@@ -16,10 +16,16 @@ class Game:
         self.graph_of_dynamic_P1 = GraphP1(self.game_graph,get_nodes_of_dynamic_graph(self.game_graph)).graph_dyna
         self.graph_of_dynamic_bP1 = GraphbP1(self.game_graph, get_nodes_of_dynamic_graph(self.game_graph)).graph_dyna
         self.graph_of_dynamic_PC = GraphPC(self.game_graph, get_nodes_of_dynamic_graph(self.game_graph)).graph_dyna
-        self.graph_of_dynamic_bPC = GraphPC(self.game_graph, get_nodes_of_dynamic_graph(self.game_graph)).graph_dyna
+        self.graph_of_dynamic_bPC = GraphbPC(self.game_graph, get_nodes_of_dynamic_graph(self.game_graph)).graph_dyna
 
     def display_game_graph(self):
         affichage(self.game_graph)
 
-    def display_dynamic_graph(self,dynamic_graph):
-        affichage_dyna(dynamic_graph,"")
+    def display_dynamic_graph_P1(self):
+        affichage_dyna(self.graph_of_dynamic_P1,"P1")
+    def display_dynamic_graph_bP1(self):
+        affichage_dyna(self.graph_of_dynamic_P1,"bP1")
+    def display_dynamic_graph_PC(self):
+        affichage_dyna(self.graph_of_dynamic_P1,"PC")
+    def display_dynamic_graph_bPC(self):
+        affichage_dyna(self.graph_of_dynamic_P1,"bPC")
