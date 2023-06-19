@@ -223,29 +223,41 @@ def pull_max_pref(player, label):
 def stuck_in_cycle(G: nx.DiGraph, cycle: list, player):
     d = {p[2]: p[:2] for p in G.edges.data(nbunch=player, data="w", default="")}
     max_out, max_in = 0, 0
+    max_out_path = None
+
     for label in d:
-        temp = pull_max_pref(player, label)
+        path = pull_max_pref(player, label)
         if d[label][1] in cycle:
-            if player.preference[temp] > max_in:
-                max_in = player.preference[temp]
+            if player.preference[path] > max_in:
+                max_in = player.preference[path]
         else:
-            if player.preference[temp] > max_out:
-                max_out = player.preference[temp]
-    return max_in > max_out #ambiguité si équivalence entre les chemins, on suppose que il va sortir si possible
+            if player.preference[path] > max_out:
+                max_out = player.preference[path]
+    return max_in > max_out, max_out_path
 
 
-def find_dw(G: nx.DiGraph):
+def is_sdw(lst_path_out: list):
+    for path_source in lst_path_out:
+        for path_target in lst_path_out:
+            if 0 < len(path_source.strategy.intersection(path_target.strategy)) < len(path_source.strategy):
+                return False
+    return True
+
+def find_dw_sdw(G: nx.DiGraph):
     cycles = loop_get_cycles(G)
-
+    lst_path_out = []
     for cycle in cycles:
         dw = True
         for player in cycle:
-            if not stuck_in_cycle(G, cycle, player):
+            is_stuck, path_out = stuck_in_cycle(G, cycle, player)
+            if path_out is not None:
+                lst_path_out.append(path_out)
+            if not is_stuck:
                 dw = False
                 break
         if dw:
-            return True
-    return False
+            return True, is_sdw(lst_path_out)
+    return False, False
 
 
 def is_fair_cycle(dyna_G: nx.DiGraph, cycle: list):
