@@ -246,13 +246,15 @@ def stuck_in_cycle(G: nx.DiGraph, cycle: list, player):
     max_out_path = None
 
     for label in d:
+        print(label, player)
         path = pull_max_pref(player, label)
-        if d[label][1] in cycle:
-            if player.preference[path] > max_in:
-                max_in = player.preference[path]
-        else:
-            if player.preference[path] > max_out:
-                max_out = player.preference[path]
+        if path is not None:
+            if d[label][1] in cycle:
+                if player.preference[path] > max_in:
+                    max_in = player.preference[path]
+            else:
+                if player.preference[path] > max_out:
+                    max_out = player.preference[path]
     return max_in > max_out, max_out_path
 
 
