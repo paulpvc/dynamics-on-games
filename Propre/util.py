@@ -15,6 +15,13 @@ def get_graph(nodes: list, edges: list[tuple]):
 
 
 def outcome(player, strategy: set):
+    """
+    fonction renvoyant le score de la strategy par rapport aux préférence du player passé en paramètre, en cherchant
+    la strategie dans les préférences du joueur correspondant à la strategy passé en paramètre
+    :param player: objet Player dont on utilise les préférences
+    :param strategy: objet Strategy a déterminer le scoe
+    :return: int : score correspondant à la strategy
+    """
 
     #temp_strat = get_edge_name_set(strategy, G)
     for preference in player.preference:
@@ -27,12 +34,25 @@ def outcome(player, strategy: set):
 
 
 def get_edge_name_set(edges: set, G: nx.DiGraph):
+    """
+    fonction renvoyant le set des noms des arcs du set d'arcs passé en paramètre
+    :param edges: set des arcs dont on cherche les noms
+    :param G: Graphe de jeu de type networkx.DiGraph
+    :return: set[string]: contenant les noms des arcs du set edges
+    """
     res = set()
     for edge in edges:
         res.add(G.get_edge_data(*edge)["w"])
     return res
 
 def get_edge_name(edges: set, G: nx.DiGraph):
+    """
+    foniton renvoyant le nom du chemin edges passé en paramètre, ce nom correspond a la concaténation des noms des arcs
+    constituant le chemin edges
+    :param edges: set d'arcs dont on cherche le nom du chemin
+    :param G: Graphe de jeu de type networkx.DiGraph
+    :return: str: nom du chemin en string
+    """
     res = ""
     for edge in edges:
         res += G.get_edge_data(*edge)["w"]
