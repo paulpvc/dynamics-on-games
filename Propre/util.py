@@ -205,32 +205,6 @@ def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: d
     return []
 
 
-def get_product_matrix(mat1,mat2):
-    mat1_row = len(mat1)
-    mat1_columm = len(mat1[0])
-    mat2_row = len(mat2)
-    mat2_column = len(mat2[0])
-    if mat1_columm != mat2_row:
-        return -1
-    result = np.zeros((mat1_row,mat2_column))
-    for i in range(mat1_row):
-        for j in range(mat2_column):
-            for k in range(mat1_columm):
-                result[i][j]+=mat1[i][k]*mat2[k][j]
-            if result[i][j]>0:
-                result[i][j]=1
-    return result
-
-
-
-
-def get_final_matrix(m: np.ndarray):
-    square_of_m = get_product_matrix(m,m)
-    while(not np.array_equal(m,square_of_m)):
-        m = square_of_m
-        square_of_m = get_product_matrix(square_of_m,square_of_m)
-    return m
-
 def pull_max_pref(player, label):
     max_pref = None
     for strategy in player.preference:
@@ -246,8 +220,9 @@ def stuck_in_cycle(G: nx.DiGraph, cycle: list, player):
     max_out_path = None
 
     for label in d:
-        print(label, player)
+        #print(label, player)
         path = pull_max_pref(player, label)
+        #print(label, player)
         if path is not None:
             if d[label][1] in cycle:
                 if player.preference[path] > max_in:
@@ -255,20 +230,46 @@ def stuck_in_cycle(G: nx.DiGraph, cycle: list, player):
             else:
                 if player.preference[path] > max_out:
                     max_out = player.preference[path]
+                    max_out_path = path
     return max_in > max_out, max_out_path
 
+def get_edges_from_name(edges_name: set[str], G: nx.DiGraph):
+     edges = set()
+     for edge in G.edges():
+        if G.get_edge_data(*edge)["w"] in edges_name:
+            edges.add(edge)
+            if len(edges) == len(edges_name):
+                return edges
+     return edges
 
-def is_sdw(lst_path_out: list):
+
+def same_end(path_intersection: set[tuple]):
+    i, count = 0, 0
+    current = "vb"
+    while i < len(path_intersection):
+        in_lst = [tpl for tpl in path_intersection if tpl[1].name == current]
+        if len(in_lst) == 0:
+            return False
+        current = in_lst[0][0]
+        i += 1
+    return True
+
+
+def is_sdw(lst_path_out: list, G: nx.DiGraph):
     for path_source in lst_path_out:
         for path_target in lst_path_out:
+            #print(path_source, path_target)
             if 0 < len(path_source.strategy.intersection(path_target.strategy)) < len(path_source.strategy):
-                return False
+                path_s_temp = get_edges_from_name(path_source.strategy, G)
+                path_t_temp = get_edges_from_name(path_target.strategy, G)
+                if not same_end(path_s_temp.intersection(path_t_temp)):
+                    return False
     return True
 
 def find_dw_sdw(G: nx.DiGraph):
     cycles = loop_get_cycles(G)
-    lst_path_out = []
     for cycle in cycles:
+        lst_path_out = []
         dw = True
         for player in cycle:
             is_stuck, path_out = stuck_in_cycle(G, cycle, player)
@@ -278,7 +279,8 @@ def find_dw_sdw(G: nx.DiGraph):
                 dw = False
                 break
         if dw:
-            return True, is_sdw(lst_path_out)
+            print(lst_path_out)
+            return True, is_sdw(lst_path_out, G)
     return False, False
 
 

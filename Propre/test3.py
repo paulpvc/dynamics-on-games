@@ -20,6 +20,7 @@ def test():
     strat5 = Strategy({"s2"})
     strat2 = Strategy({"s1"})
     strat6 = Strategy({"s3"})
+    strat7 = Strategy({"c3", "s1"})
 
     preferences = {player1: [(strat2, strat3)],
                    player2: [(strat5, strat4)],
