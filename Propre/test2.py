@@ -10,7 +10,7 @@ from Graph_bPC import GraphbPC
 player1 = Player("v1")
 player2 = Player("v2")
 playerB = Player("vb")
-lst = [player1, player2, playerB]
+C
 
 
 

@@ -7,21 +7,24 @@ from util import get_graph,affichage_dyna
 from LinkedList import *
 
 
+date = 0
 
 
-
-def visit_node_in_dfs(node, G:nx.DiGraph, color: dict,parents: dict, discovery_date:dict, treatment_end_date:dict,back_edges:set,forward_and_cross_edges:set,liaison):
+def visit_node_in_dfs(node, G:nx.DiGraph, color: dict,visited: list, discovery_date:dict, treatment_end_date:dict,back_edges:set,forward_and_cross_edges:set,liaison,cycles):
   color[node] = "g"
   global date
   date+=1
   discovery_date[node] = date
   for successor in list(G.successors(node)):
       if color[successor] == "w":
-          parents[node] = successor
+          visited.append(successor)
           liaison.add((node,successor))
-          visit_node_in_dfs(successor,G,color,parents,discovery_date,treatment_end_date,back_edges,forward_and_cross_edges,liaison)
+          visit_node_in_dfs(successor,G,color,visited,discovery_date,treatment_end_date,back_edges,forward_and_cross_edges,liaison,cycles)
       elif color[successor] == "g":
           back_edges.add((node,successor))
+          cycles.append(visited[visited.index(successor):visited.index(node)+1])
+
+          
       if  color[successor] == "b" and (node,successor) not in liaison:
           forward_and_cross_edges.add((node,successor))
   color[node] = "b"
@@ -32,20 +35,23 @@ def visit_node_in_dfs(node, G:nx.DiGraph, color: dict,parents: dict, discovery_d
 
 def depth_first_search(G:nx.DiGraph):
     color = {node: "w" for node in list(G.nodes())}
-    parents = {node: None for node in list(G.nodes)}
+    visited = []
     discovery_date = {}
     treatment_end_date = {}
     forward_and_cross_edges = set()
     liaison = set()
     back_edges = set()
+    cycles = []
     global date
     date = 0
     for node in list(G.nodes()):
+        visited = [node]
         if color[node] == "w":
-            visit_node_in_dfs(node,G,color,parents,discovery_date, treatment_end_date,back_edges,forward_and_cross_edges,liaison)
+            visit_node_in_dfs(node,G,color,visited,discovery_date, treatment_end_date,back_edges,forward_and_cross_edges,liaison,cycles)
+
     #print(forward_and_cross_edges)
 
-    return {"parents":parents,
+    return {"cycles":cycles,
             "discovery_date":discovery_date,
             "treatment_end_date":treatment_end_date,
             "back_edges":back_edges,
@@ -56,6 +62,10 @@ def depth_first_search(G:nx.DiGraph):
 def contains_cycle(G:nx.DiGraph):
     return len(depth_first_search(G)["back_edges"]) > 0
 
+def get_cycles(G:nx.DiGraph):
+    pass
+
+
 
 def topological_sorting (G:nx.DiGraph):
     treatment_end_date = depth_first_search(G)["treatment_end_date"]
@@ -65,21 +75,21 @@ def topological_sorting (G:nx.DiGraph):
     return list_nodes
 
 
-def visit_node_in_dfs_for_kosaraju(node,G: nx.DiGraph,parents:dict,color:dict,component,liaison,forward_and_cross_edges):
+def visit_node_in_dfs_for_kosaraju(node,G: nx.DiGraph,visited:dict,color:dict,component,liaison,forward_and_cross_edges):
     color[node] = "g"
     for successor in list(G.successors(node)):
         if color[successor] == "w":
             liaison.add((node, successor))
             component.append(successor)
-            parents[node] = successor
-            visit_node_in_dfs_for_kosaraju(successor, G,parents,color,component,liaison, forward_and_cross_edges)
+            visited[node] = successor
+            visit_node_in_dfs_for_kosaraju(successor, G,visited,color,component,liaison, forward_and_cross_edges)
         if color[successor] == "b" and (node, successor) not in liaison:
             forward_and_cross_edges.add((successor,node))
     color[node] = "b"
 
 def depth_first_search_for_kosaraju(G:nx.DiGraph, treatment_end_date:dict):
     color = {node: "w" for node in list(G.nodes())}
-    parents = {node: None for node in list(G.nodes)}
+    visited = {node: None for node in list(G.nodes)}
     connected_components = {}
     id = 0
     liaison = set()
@@ -90,7 +100,7 @@ def depth_first_search_for_kosaraju(G:nx.DiGraph, treatment_end_date:dict):
         if color[node] == "w":
             component = [node]
             id+=1
-            visit_node_in_dfs_for_kosaraju(node,G,parents,color,component,liaison,forward_and_cross_edges)
+            visit_node_in_dfs_for_kosaraju(node,G,visited,color,component,liaison,forward_and_cross_edges)
             connected_components[id] = component
             #print(component)
             #print(forward_and_cross_edges)
@@ -137,19 +147,20 @@ def score(G:nx.DiGraph):
     return score
 
 
-if __name__ =="__main__":
-    date = 0
-    color = {}
 
-    nodes = [1, 2, 3, 4, 5, 6, 7, ]
-    edges = [(1, 2), (2, 3), (3, 4), (4, 1), (2, 5), (5, 6), (6, 5), (5, 7), (3, 5)]
-    G = get_graph(nodes, edges)
 
-    c = {(2, 5): "polo"}
-    print(c[(2, 5)])
-    print(depth_first_search(G.reverse()))
+color = {}
 
-    print(get_connected_components_graph(G))
-    print(topological_sorting(get_connected_components_graph(G)[0]))
+nodes = [1, 2, 3, 4, 5, 6, 7, ]
+edges = [(1, 2), (2, 3), (3, 4), (4, 1), (2, 5), (5, 6), (6, 5), (5, 7), (3, 5)]
+G = get_graph(nodes, edges)
+
+#c = {(2, 5): "polo"}
+#print(c[(2, 5)])
+#print(depth_first_search(G.reverse()))
+
+#print(get_connected_components_graph(G))
+#print(topological_sorting(get_connected_components_graph(G)[0]))
+print(G.out_degree(5))
     # affichage_dyna(get_connected_components_graph(G),"composante")
 

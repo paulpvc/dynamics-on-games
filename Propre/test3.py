@@ -2,6 +2,7 @@
 from Player import Player
 from Strategy import Strategy
 from Game import Game
+from util import is_n1tg
 
 def test():
     player1 = Player("v1")
@@ -26,10 +27,10 @@ def test():
 
     game = Game(lst,edge_list,preferences)
 
-    game.display_game_graph()
-    game.display_dynamic_graph_PC()
-    game.contain_dw_sdw()
-
+    #game.display_game_graph()
+    #game.display_dynamic_graph_PC()
+    #game.contain_dw_sdw()
+    print(game.graph_of_dynamic_PC.contains_fair_cycle())
 
 
 def test2():
@@ -46,13 +47,9 @@ def test2():
     strat5 = Strategy({"s2"})
     strat2 = Strategy({"s1"})
 
-    preferences = {player1: [(strat2, strat3)],
-                   player2: [(strat5, strat4)]}
+    preferences = {player1: {strat3:1,strat2:1},
+                   player2: {strat5:1,strat4:1}}
 
     game = Game(lst, edge_list, preferences)
-
-    game.display_game_graph()
-    game.display_dynamic_graph_PC()
-    game.contain_dw_sdw()
-
-test2()
+    print(is_n1tg(game.game_graph))
+test()

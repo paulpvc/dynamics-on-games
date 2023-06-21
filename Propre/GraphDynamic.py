@@ -18,7 +18,7 @@ class GraphDynamic:
         """
         return not loop_cycle_detection(self.graph_dyna)
 
-    def contain_fair_cycle(self):
+    def contains_fair_cycle(self):
         """
         retourne un booléen déterminant si le graphe de dynamique contient un cycle équitable (vecteur pour savoir
         si la dynamique termine équitablement
@@ -26,6 +26,6 @@ class GraphDynamic:
         """
         cycles = loop_get_cycles(self.graph_dyna)
         for cycle in cycles:
-            if not is_fair_cycle(self.graph_dyna, cycle):
+            if not is_fair_cycle(self.graph_dyna, cycle,list(self.G.nodes)):
                 return False
         return True
