@@ -62,8 +62,8 @@ def depth_first_search(G:nx.DiGraph):
 def contains_cycle(G:nx.DiGraph):
     return len(depth_first_search(G)["back_edges"]) > 0
 
-def get_cycles(G:nx.DiGraph):
-    pass
+def get_cycles_from_graph(G:nx.DiGraph):
+    return depth_first_search(G)["cycles"]
 
 
 
@@ -164,3 +164,4 @@ G = get_graph(nodes, edges)
 print(G.out_degree(5))
     # affichage_dyna(get_connected_components_graph(G),"composante")
 
+print(depth_first_search(G)["cycles"])

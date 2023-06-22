@@ -2,6 +2,7 @@ import networkx as nx
 from util import *
 from Player import Player
 from Strategy import Strategy
+from algoGraphs import get_cycles_from_graph
 
 
 class GraphDynamic:
@@ -18,7 +19,7 @@ class GraphDynamic:
         """
         return not loop_cycle_detection(self.graph_dyna)
 
-    def contains_fair_cycle(self):
+    def contains_non_fair_cycle(self):
         """
         retourne un booléen déterminant si le graphe de dynamique contient un cycle équitable (vecteur pour savoir
         si la dynamique termine équitablement
@@ -26,6 +27,6 @@ class GraphDynamic:
         """
         cycles = loop_get_cycles(self.graph_dyna)
         for cycle in cycles:
-            if not is_fair_cycle(self.graph_dyna, cycle,list(self.G.nodes)):
-                return False
-        return True
+            if not is_fair_cycle(self.graph_dyna, cycle,list(self.G.nodes),self.strategies_profiles):
+                return True
+        return False
