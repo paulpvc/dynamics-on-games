@@ -2,9 +2,6 @@ import networkx as nx
 import my_networkx as my_nx
 import matplotlib.pyplot as plt
 from itertools import product
-import numpy as np
-from Pile import Pile
-
 
 
 def get_graph(nodes: list, edges: list[tuple]):
@@ -106,11 +103,13 @@ def get_strategy_profiles(graph: nx.DiGraph):
     strategy_profiles = [strategy_profile for strategy_profile in (product(*players_actions.values()))]
     return strategy_profiles
 
+
 def get_dict_index(strat: set, pref_dict: dict):
     for id, strat_temp in pref_dict.items():
         if strat == strat_temp:
             return id
     return -1
+
 
 def get_preference_edges(preference):
     arcs = []
@@ -160,21 +159,6 @@ def affichage_dyna(G, title=""):
     plt.show()
 
 
-def dfs(G: nx.DiGraph, source, seen: dict, cycle: list):
-    seen[source] = True
-    if G.out_degree(source) == 0 and G.in_degree(source) > 0:
-        return True
-    for node in G.neighbors(source):
-
-        if node in cycle:
-            #TODO Verifier que c'est une condition nécéssaire car il existe des graphes pour lesquels Gdis est mineur
-            #Il faut surement rajouter la notion de préférence parce que c'est trop général?
-            return False
-        elif not seen[node]:
-            if dfs(G, node, seen, cycle):
-                return True
-    return False
-
 def loop_get_cycles(G: nx.DiGraph):
     seen = {node: False for node in list(G.nodes())}
     current_path = []
@@ -196,7 +180,7 @@ def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: d
         if not seen[node]:
             temp = get_cycles(G, node, seen, current_path, id_dict)
             if len(temp) > 0:
-                print(temp)
+                #print(temp)
                 return temp
         elif id_dict[node] > -1:
             return current_path[id_dict[node]:]
@@ -220,9 +204,8 @@ def stuck_in_cycle(G: nx.DiGraph, cycle: list, player):
     max_out_path = None
 
     for label in d:
-        #print(label, player)
         path = pull_max_pref(player, label)
-        #print(label, player)
+
         if path is not None:
             if d[label][1] in cycle:
                 if player.preference[path] > max_in:
@@ -279,7 +262,7 @@ def find_dw_sdw(G: nx.DiGraph):
                 dw = False
                 break
         if dw:
-            print(lst_path_out)
+            #print(lst_path_out)
             return True, is_sdw(lst_path_out, G)
     return False, False
 
@@ -343,9 +326,3 @@ def is_n1tg(G:nx.DiGraph):
                     return False
         return True
     return False
-
-
-
-
-
-

@@ -148,7 +148,7 @@ def score(G:nx.DiGraph):
 
 
 
-
+"""
 color = {}
 
 nodes = [1, 2, 3, 4, 5, 6, 7, ]
@@ -161,6 +161,7 @@ G = get_graph(nodes, edges)
 
 #print(get_connected_components_graph(G))
 #print(topological_sorting(get_connected_components_graph(G)[0]))
-print(G.out_degree(5))
+print(G.out_degree(5), "eédu")
     # affichage_dyna(get_connected_components_graph(G),"composante")
 
+"""
