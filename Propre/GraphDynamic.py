@@ -33,6 +33,6 @@ class GraphDynamic:
         """
         cycles = loop_get_cycles(self.graph_dyna)
         for cycle in cycles:
-            if not is_fair_cycle(self.graph_dyna, cycle,list(self.G.nodes)):
-                return False
-        return True
+            if is_fair_cycle(self.graph_dyna, cycle,list(self.G.nodes)):
+                return True
+        return False
