@@ -37,7 +37,7 @@ class Game:
         lst = [self.graph_of_dynamic_P1, self.graph_of_dynamic_bP1, self.graph_of_dynamic_PC, self.graph_of_dynamic_bPC]
         label = ["P1", "bP1", "PC", "bPC"]
         for i in range(len(lst)):
-            print(f"terminaison de {label[i]}:", lst[i].does_fairly_terminate())
+            print(f"terminaison de {label[i]}:", lst[i].does_terminate())
 
     def contain_dw_sdw(self):
         dw, sdw = find_dw_sdw(self.game_graph)
