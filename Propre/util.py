@@ -346,7 +346,7 @@ def is_n1tg(G:nx.DiGraph):
 #
 
 
-
+4
 
 
 
