@@ -8,12 +8,13 @@ from Graph_bPC import GraphbPC
 
 
 class Game:
-    def __init__(self,players:list[Player],edges:list,preferences:dict):
+    def __init__(self,players:list[Player],edges:list,preferences: dict):
         self.game_graph = get_graph(players,edges)
         for player in players:
             if player in preferences.keys():
                 player.set_preferences(preferences[player])
         nodes = get_nodes_of_dynamic_graph(self.game_graph)
+        print(nodes)
         self.graph_of_dynamic_P1 = GraphP1(self.game_graph,nodes)
         self.graph_of_dynamic_bP1 = GraphbP1(self.game_graph, nodes)
         self.graph_of_dynamic_PC = GraphPC(self.game_graph, nodes)
@@ -31,6 +32,12 @@ class Game:
         affichage_dyna(self.graph_of_dynamic_PC.graph_dyna,"PC")
     def display_dynamic_graph_bPC(self):
         affichage_dyna(self.graph_of_dynamic_bPC.graph_dyna,"bPC")
+
+    def display_dynamics_terminations(self):
+        lst = [self.graph_of_dynamic_P1, self.graph_of_dynamic_bP1, self.graph_of_dynamic_PC, self.graph_of_dynamic_bPC]
+        label = ["P1", "bP1", "PC", "bPC"]
+        for i in range(len(lst)):
+            print(f"terminaison de {label[i]}:", lst[i].does_fairly_terminate())
 
     def contain_dw_sdw(self):
         dw, sdw = find_dw_sdw(self.game_graph)
