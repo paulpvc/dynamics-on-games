@@ -2,6 +2,9 @@ import networkx as nx
 import my_networkx as my_nx
 import matplotlib.pyplot as plt
 from itertools import product
+import numpy as np
+from Pile import Pile
+
 
 
 def get_graph(nodes: list, edges: list[tuple]):
@@ -103,13 +106,11 @@ def get_strategy_profiles(graph: nx.DiGraph):
     strategy_profiles = [strategy_profile for strategy_profile in (product(*players_actions.values()))]
     return strategy_profiles
 
-
 def get_dict_index(strat: set, pref_dict: dict):
     for id, strat_temp in pref_dict.items():
         if strat == strat_temp:
             return id
     return -1
-
 
 def get_preference_edges(preference):
     arcs = []
@@ -159,6 +160,21 @@ def affichage_dyna(G, title=""):
     plt.show()
 
 
+def dfs(G: nx.DiGraph, source, seen: dict, cycle: list):
+    seen[source] = True
+    if G.out_degree(source) == 0 and G.in_degree(source) > 0:
+        return True
+    for node in G.neighbors(source):
+
+        if node in cycle:
+            #TODO Verifier que c'est une condition nécéssaire car il existe des graphes pour lesquels Gdis est mineur
+            #Il faut surement rajouter la notion de préférence parce que c'est trop général?
+            return False
+        elif not seen[node]:
+            if dfs(G, node, seen, cycle):
+                return True
+    return False
+
 def loop_get_cycles(G: nx.DiGraph):
     seen = {node: False for node in list(G.nodes())}
     current_path = []
@@ -180,7 +196,7 @@ def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: d
         if not seen[node]:
             temp = get_cycles(G, node, seen, current_path, id_dict)
             if len(temp) > 0:
-                #print(temp)
+                print(temp)
                 return temp
         elif id_dict[node] > -1:
             return current_path[id_dict[node]:]
@@ -204,8 +220,9 @@ def stuck_in_cycle(G: nx.DiGraph, cycle: list, player):
     max_out_path = None
 
     for label in d:
+        #print(label, player)
         path = pull_max_pref(player, label)
-
+        #print(label, player)
         if path is not None:
             if d[label][1] in cycle:
                 if player.preference[path] > max_in:
@@ -262,19 +279,21 @@ def find_dw_sdw(G: nx.DiGraph):
                 dw = False
                 break
         if dw:
-            #print(lst_path_out)
+            print(lst_path_out)
             return True, is_sdw(lst_path_out, G)
     return False, False
 
 
-def is_fair_cycle(dyna_G: nx.DiGraph, cycle: list,players:list):
+def is_fair_cycle(dyna_G: nx.DiGraph, cycle: list,players:list,nodes_strat):
     for strategy in cycle:
         #print(strategy, dyna_G.out_degree(strategy))
         if dyna_G.out_degree(strategy) > 1:
             for strategy_target in list(dyna_G.successors(strategy)):
                 if strategy_target not in cycle:
                     for player in players:
-                        if outcome(player,strategy)< outcome(player,strategy_target):
+                        source_index = nodes_strat[0].index(strategy)
+                        source_target = nodes_strat[0].index(strategy_target)
+                        if outcome(player,nodes_strat[1][source_index])< outcome(player,nodes_strat[1][source_target]):
                             return False
     return True
 
@@ -284,7 +303,7 @@ def get_nodes_of_dynamic_graph(graph:nx.DiGraph):
     set_of_edges_label = set()
     my_list = []
     node_label_content = []
-    strategy_profiles = list(map(set,get_strategy_profiles(graph)))
+    strategy_profiles = get_strategy_profiles(graph)
     for strategy_profile in strategy_profiles:
         for player_strategy in strategy_profile:
             temp = graph.get_edge_data(*player_strategy)["w"]
@@ -294,7 +313,7 @@ def get_nodes_of_dynamic_graph(graph:nx.DiGraph):
         my_list.append(set_of_edges_label)
         node_label_content = []
         set_of_edges_label = set()
-    return nodes,my_list,strategy_profiles
+    return nodes,my_list,list(map(set,(strategy_profiles)))
 
 
 def get_edges_from_path(path:list):
@@ -305,24 +324,29 @@ def get_edges_from_path(path:list):
 
 
 def is_n1tg(G:nx.DiGraph):
-    count = 0
-    for node in list(G.nodes()):
-        if G.out_degree(node) == 0:
-            count+=1
-            vBot = node
-    if count == 1:
         players = list(filter(lambda x: (G.out_degree[x] > 0), G.nodes))
+        vBot = list(filter(lambda x: (G.out_degree[x] == 0), G.nodes))
         for player in players:
-            player_permitted_paths = list(nx.all_simple_paths(G,player,vBot))
-            my_list = []
-            label_list = []
-            for path in player_permitted_paths:
-                my_list.append(get_edges_from_path(path))
-            for edge in my_list:
-                label_list.append(get_edge_name_set(edge,G))
-            payoff = outcome(player,label_list[0])
-            for i in range(1,len(label_list)):
-                if outcome(player,label_list[i]) != payoff:
-                    return False
+            player_permitted_paths = list(nx.all_simple_paths(G,player,*vBot))
+            for path1 in player_permitted_paths:
+                for path2 in player_permitted_paths:
+                    if path1 != path2:
+                        if path1[1] == path2[1]:
+                            edges = [get_edges_from_path(path1),get_edges_from_path(path2)]
+                            strategies = [get_edge_name_set(edges[0],G),get_edge_name_set(edges[1],G)]
+                            if outcome(player,strategies[0]) != outcome(player,strategies[1]):
+                                return False
         return True
-    return False
+
+
+
+# fonctions utiles:
+#get_edges_from_path(path)
+#get_edge_name_set(edge,G)
+#
+
+
+4
+
+
+

@@ -5,10 +5,6 @@ from itertools import product
 from util import *
 
 
-
-
-
-
 def get_graph(nodes: list, edges: list[tuple]):
     graph = nx.DiGraph()
     graph.add_nodes_from(nodes)
@@ -129,7 +125,7 @@ affichage_dyna(graph3)
 
 print(get_strategy_profiles(graph1))"""
 
-print(get_nodes_of_dynamic_graph(graph1))
+print(get_strategy_profiles(graph1))
 
 """graph4 = get_graph(get_nodes_of_dynamic_graph(graph1)[0],get_edges_of_dynamic_PC_graph(graph1,preferences,players))
 graph5 = get_graph(get_nodes_of_dynamic_graph(graph1)[0],get_edges_of_dynamic_P1_graph(graph1,preferences))
