@@ -151,11 +151,11 @@ def affichage_dyna(G, title=""):
     """
     pos = nx.spring_layout(G, seed=5, k=5)
     fig, ax = plt.subplots()
-    nx.draw_networkx_nodes(G, pos, ax=ax)
+    nx.draw_networkx_nodes(G, pos, ax=ax, node_size=900)
     nx.draw_networkx_labels(G, pos, ax=ax)
 
     curved_edges = [edge for edge in G.edges()]
-    nx.draw_networkx_edges(G, pos, edgelist=curved_edges, connectionstyle='arc3, rad=0.25', arrows=True)
+    nx.draw_networkx_edges(G, pos, edgelist=curved_edges, connectionstyle='arc3, rad=0.25', arrows=True, arrowsize=20, node_size=900)
     plt.title(title)
     plt.show()
 
