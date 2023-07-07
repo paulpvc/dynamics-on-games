@@ -1,7 +1,6 @@
-from util import *
-from Player import Player
-from Strategy import Strategy
-from Game import Game
+from Propre.Game.Player import Player
+from Propre.Game.Strategy import Strategy
+from Propre.Game.Game import Game
 
 
 def test1():

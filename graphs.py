@@ -259,8 +259,8 @@ def const_dyna_graph_bestPC(preferences: dict, chemins_dyna : list[set]):
                             dyna_bPC.add_edge(i, j)
     return dyna_bPC
 
-"""dyna_bPC = const_dyna_graph_bestPC(preferences, chemins_dyna)
-affichage_dyna(dyna_bPC, "bPC")"""
+dyna_bPC = const_dyna_graph_bestPC(preferences, chemins_dyna)
+affichage_dyna(dyna_bPC, "bPC")
 
 """print("terminaison de P1: "+str(not loop_cycle_detection(dyna_P1)))
 print("terminaison de bP1: "+str(not loop_cycle_detection(dyna_bP1)))

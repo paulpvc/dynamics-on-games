@@ -1,6 +1,5 @@
 from util import *
 from Player import Player
-from Strategy import Strategy
 from Graph_P1 import GraphP1
 from Graph_PC import GraphPC
 from Graph_bP1 import GraphbP1
@@ -14,7 +13,6 @@ class Game:
             if player in preferences.keys():
                 player.set_preferences(preferences[player])
         nodes = get_nodes_of_dynamic_graph(self.game_graph)
-        print(nodes)
         self.graph_of_dynamic_P1 = GraphP1(self.game_graph,nodes)
         self.graph_of_dynamic_bP1 = GraphbP1(self.game_graph, nodes)
         self.graph_of_dynamic_PC = GraphPC(self.game_graph, nodes)
@@ -34,12 +32,21 @@ class Game:
         affichage_dyna(self.graph_of_dynamic_bPC.graph_dyna,"bPC")
 
     def display_dynamics_terminations(self):
+        """
+        affiche dan sla console la terminaison des dynamiques
+        :return: None
+        """
         lst = [self.graph_of_dynamic_P1, self.graph_of_dynamic_bP1, self.graph_of_dynamic_PC, self.graph_of_dynamic_bPC]
         label = ["P1", "bP1", "PC", "bPC"]
         for i in range(len(lst)):
             print(f"terminaison de {label[i]}:", lst[i].does_terminate())
 
     def contain_dw_sdw(self):
+        """
+        heuristique pour déterminer la présence de dw et sdw dans un graphe
+        (ne marche que dans certains cas particuliers)
+        :return: bool
+        """
         dw, sdw = find_dw_sdw(self.game_graph)
         print("présence d'une DW:", dw)
         print("présence d'une SDW:", sdw)
