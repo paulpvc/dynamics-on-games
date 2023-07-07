@@ -6,8 +6,13 @@ import numpy as np
 from Pile import Pile
 
 
-
 def get_graph(nodes: list, edges: list[tuple]):
+    """
+    fonction de construction d'un graphe avec des noeuds donnés et des arcs donnés
+    :param nodes: liste des noeuds du graphe
+    :param edges: liste des arcs entre les noeuds du graphe
+    :return: un graphe de type networkx.DiGraph
+    """
     graph = nx.DiGraph()
     graph.add_nodes_from(nodes)
     graph.add_edges_from(edges)
@@ -44,6 +49,7 @@ def get_edge_name_set(edges: set, G: nx.DiGraph):
     for edge in edges:
         res.add(G.get_edge_data(*edge)["w"])
     return res
+
 
 def get_edge_name(edges: set, G: nx.DiGraph):
     """
@@ -98,6 +104,12 @@ def cycle_detection(G, source, seen: dict, current_path: dict):
 
 
 def get_strategy_profiles(graph: nx.DiGraph):
+    """
+    fonction permettant de calculer et renvoyer une liste de tous les profils de stratégies en fonctions des chemins
+    possibles
+    :param graph: graphe de Jeu
+    :return: liste des profils de stratégies
+    """
     players_actions = {}
 
     for node in list(graph.nodes):
@@ -106,13 +118,27 @@ def get_strategy_profiles(graph: nx.DiGraph):
     strategy_profiles = [strategy_profile for strategy_profile in (product(*players_actions.values()))]
     return strategy_profiles
 
+
 def get_dict_index(strat: set, pref_dict: dict):
+    """
+    fonction permettant de récupérer l'index d'une stratégie dans un dictionnaire de préférence(-1 si pas présent)
+    :param strat: la stratégie à trouver
+    :param pref_dict: dictionnaire de préférence
+    :return: indice de la stratégie: int
+    """
     for id, strat_temp in pref_dict.items():
         if strat == strat_temp:
             return id
     return -1
 
+
 def get_preference_edges(preference):
+    """
+    fonction renvoyant une liste d'arcs depusi une liste de tuple où les tuples sont de taille n, et représentent
+    les relations de préférences directe entre les chemins possibles d'un joueur
+    :param preference: liste de tuples des préférences d'un chemins par rapport à d'autres
+    :return: liste de tuple de taille 2 étant des arcs d'un graphe de préférence
+    """
     arcs = []
     for pref_tuple in preference:
         if len(pref_tuple) == 1:
@@ -143,6 +169,7 @@ def affichage(G, title=""):
     plt.title(title)
     plt.show()
 
+
 def affichage_dyna(G, title=""):
     """
     affichage d'un graphe orienté pour les dynamiques (arcs sans nom)
@@ -161,21 +188,34 @@ def affichage_dyna(G, title=""):
 
 
 def dfs(G: nx.DiGraph, source, seen: dict, cycle: list):
+    """
+    fonction réalisant un parcours en profondeur d'un graphe et permet de récupérer la présence d'un cycle
+    :param G: graphe networkx.DiGraph
+    :param source: noeud source du parcours
+    :param seen: dictionnaire d'état visité ou non
+    :param cycle: liste étant les noeuds d'un cycle
+    :return: présence d'un cycle ou non
+    """
     seen[source] = True
     if G.out_degree(source) == 0 and G.in_degree(source) > 0:
         return True
     for node in G.neighbors(source):
 
         if node in cycle:
-            #TODO Verifier que c'est une condition nécéssaire car il existe des graphes pour lesquels Gdis est mineur
-            #Il faut surement rajouter la notion de préférence parce que c'est trop général?
             return False
         elif not seen[node]:
             if dfs(G, node, seen, cycle):
                 return True
     return False
 
+
 def loop_get_cycles(G: nx.DiGraph):
+    """
+    Fonction permettant de récupérer TOUS les cycles d'un graphe donné, en réalisant un parcours en profondeur depuis
+    chaques noeuds non parcourus
+    :param G: Graphe networkx.Digraph
+    :return: liste de liste de noeuds représentant la liste des cycles du graphe
+    """
     seen = {node: False for node in list(G.nodes())}
     current_path = []
     path_id = {n: -1 for n in G.nodes()}
@@ -189,6 +229,15 @@ def loop_get_cycles(G: nx.DiGraph):
 
 
 def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: dict):
+    """
+    parcours en profondeur permettant de récupérer les noeuds d'un potentiel cycle
+    :param G: graphe networkx.DiGraph
+    :param source: noeud source (player)
+    :param seen: dictionnaire d'état parcouru ou non
+    :param current_path: chemin actuel du parcours en profondeur
+    :param id_dict: dictionnaire d'id dans le chemin
+    :return: liste de noeuds représentant un unique cycle
+    """
     seen[source] = True
     current_path.append(source)
     id_dict[source] = len(current_path)-1
@@ -206,6 +255,12 @@ def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: d
 
 
 def pull_max_pref(player, label):
+    """
+    étant donné un joueur et un profil de stratégie, on récupère le meilleur choix de chemins pour le joueur
+    :param player: joueur de typle Player
+    :param label: str d'une stratégie
+    :return: la meilleur stratégie en réponse
+    """
     max_pref = None
     for strategy in player.preference:
         if label in strategy.strategy:
@@ -215,6 +270,14 @@ def pull_max_pref(player, label):
 
 
 def stuck_in_cycle(G: nx.DiGraph, cycle: list, player):
+    """
+    fonction permettant de détecter si un joueur est bloqué dans un cycle ou non, si un chemin direct est moins bien
+    qu'un chemin indirect
+    :param G: Graphe de jeu networkx.DigGraph
+    :param cycle: cycle à évaluer pour savoir si on reste bloqué à l'intérieur
+    :param player: joueur de départ
+    :return: bool
+    """
     d = {p[2]: p[:2] for p in G.edges.data(nbunch=player, data="w", default="")}
     max_out, max_in = 0, 0
     max_out_path = None
@@ -234,16 +297,27 @@ def stuck_in_cycle(G: nx.DiGraph, cycle: list, player):
     return max_in > max_out, max_out_path
 
 def get_edges_from_name(edges_name: set[str], G: nx.DiGraph):
-     edges = set()
-     for edge in G.edges():
+    """
+    fonciton permettant de récupérer un set d'arcs(tuple) à partir d'un set de nom des arrêtes(str)
+    :param edges_name: set des noms des arrêtes
+    :param G: graphe de jeu networkx.Digraph
+    :return: set[tuple] d'arcs correspondant
+    """
+    edges = set()
+    for edge in G.edges():
         if G.get_edge_data(*edge)["w"] in edges_name:
             edges.add(edge)
             if len(edges) == len(edges_name):
                 return edges
-     return edges
+    return edges
 
 
 def same_end(path_intersection: set[tuple]):
+    """
+    étant donné l'intersection de 2 chemins on regarde si cela forme un chemin vers la fin
+    :param path_intersection: set d'arcs étant l'intersection de 2 chemins
+    :return:
+    """
     i, count = 0, 0
     current = "vb"
     while i < len(path_intersection):
@@ -256,6 +330,12 @@ def same_end(path_intersection: set[tuple]):
 
 
 def is_sdw(lst_path_out: list, G: nx.DiGraph):
+    """
+    heuristique pour déterminer si une certaine DW est une SDW (ne fonctionne pas dans 100% des cas)
+    :param lst_path_out: chemin sortant depuis un noeud du cycle
+    :param G: graphe de jeu networkx.DiGraph
+    :return: bool
+    """
     for path_source in lst_path_out:
         for path_target in lst_path_out:
             #print(path_source, path_target)
@@ -266,7 +346,10 @@ def is_sdw(lst_path_out: list, G: nx.DiGraph):
                     return False
     return True
 
+
 def find_dw_sdw(G: nx.DiGraph):
+    """heuristique pour déterminer la présence d'une DW et si jamsi d'une SDW, ne fonctionne pas dans tous les cas,
+    seulement un cas particulier"""
     cycles = loop_get_cycles(G)
     for cycle in cycles:
         lst_path_out = []
@@ -285,6 +368,15 @@ def find_dw_sdw(G: nx.DiGraph):
 
 
 def is_fair_cycle(dyna_G: nx.DiGraph, cycle: list,players:list,nodes_strat):
+    """
+    fonction permettant de déterminer si un cycle donné en paramètre est équitable ou non, en donnant le graphe de dyna
+    , les joueurs, et  nodes_strat
+    :param dyna_G: graphe de dynamique networkx.DiGraph
+    :param cycle: liste de noeuds du graphe de dynamique
+    :param players: liste de joueurs de typle Player
+    :param nodes_strat:
+    :return: bool
+    """
     for strategy in cycle:
         #print(strategy, dyna_G.out_degree(strategy))
         if dyna_G.out_degree(strategy) > 1:
@@ -299,11 +391,17 @@ def is_fair_cycle(dyna_G: nx.DiGraph, cycle: list,players:list,nodes_strat):
 
 
 def get_nodes_of_dynamic_graph(graph:nx.DiGraph):
+    """
+    fonciton permettant d'obtenir les profils de stratégie sous forme de sets et de liste de string pour avoir un
+    meilleur affichage (obtient les profils de stratégie)
+    :param graph: graphe de jeu
+    :return:
+    """
     nodes = []
     set_of_edges_label = set()
     my_list = []
     node_label_content = []
-    strategy_profiles = get_strategy_profiles(graph)
+    strategy_profiles = list(map(set,get_strategy_profiles(graph)))
     for strategy_profile in strategy_profiles:
         for player_strategy in strategy_profile:
             temp = graph.get_edge_data(*player_strategy)["w"]
@@ -317,6 +415,11 @@ def get_nodes_of_dynamic_graph(graph:nx.DiGraph):
 
 
 def get_edges_from_path(path:list):
+    """
+    fonciton qui à partir d'une liste de noeud permet de récupérer les arcs entre les noeuds(dans l'ordre de la liste)
+    :param path: liste de noeud formant un chemin
+    :return: set d'arcs
+    """
     set_edges = set()
     for i in range(len(path)-1):
         set_edges.add((path[i],path[i+1]))
@@ -324,19 +427,24 @@ def get_edges_from_path(path:list):
 
 
 def is_n1tg(G:nx.DiGraph):
-        players = list(filter(lambda x: (G.out_degree[x] > 0), G.nodes))
-        vBot = list(filter(lambda x: (G.out_degree[x] == 0), G.nodes))
-        for player in players:
-            player_permitted_paths = list(nx.all_simple_paths(G,player,*vBot))
-            for path1 in player_permitted_paths:
-                for path2 in player_permitted_paths:
-                    if path1 != path2:
-                        if path1[1] == path2[1]:
-                            edges = [get_edges_from_path(path1),get_edges_from_path(path2)]
-                            strategies = [get_edge_name_set(edges[0],G),get_edge_name_set(edges[1],G)]
-                            if outcome(player,strategies[0]) != outcome(player,strategies[1]):
-                                return False
-        return True
+    """
+    fonction permettant de savori si un jeu fournis dans une classe Game est un N1TG ou non permettant d'en savoir plus
+    :param G: graphe de jeu
+    :return: bool
+    """
+    players = list(filter(lambda x: (G.out_degree[x] > 0), G.nodes))
+    vBot = list(filter(lambda x: (G.out_degree[x] == 0), G.nodes))
+    for player in players:
+        player_permitted_paths = list(nx.all_simple_paths(G,player,*vBot))
+        for path1 in player_permitted_paths:
+            for path2 in player_permitted_paths:
+                if path1 != path2:
+                    if path1[1] == path2[1]:
+                        edges = [get_edges_from_path(path1),get_edges_from_path(path2)]
+                        strategies = [get_edge_name_set(edges[0],G),get_edge_name_set(edges[1],G)]
+                        if outcome(player,strategies[0]) != outcome(player,strategies[1]):
+                            return False
+    return True
 
 
 
@@ -346,7 +454,6 @@ def is_n1tg(G:nx.DiGraph):
 #
 
 
-4
 
 
 
