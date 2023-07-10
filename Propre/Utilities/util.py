@@ -245,7 +245,7 @@ def get_cycles(G: nx.DiGraph, source, seen: dict, current_path: list, id_dict: d
         if not seen[node]:
             temp = get_cycles(G, node, seen, current_path, id_dict)
             if len(temp) > 0:
-                print(temp)
+
                 return temp
         elif id_dict[node] > -1:
             return current_path[id_dict[node]:]
@@ -362,7 +362,7 @@ def find_dw_sdw(G: nx.DiGraph):
                 dw = False
                 break
         if dw:
-            print(lst_path_out)
+
             return True, is_sdw(lst_path_out, G)
     return False, False
 
