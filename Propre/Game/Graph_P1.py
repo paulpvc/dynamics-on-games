@@ -1,5 +1,5 @@
-from util import *
-from GraphDynamic import GraphDynamic
+from Propre.Utilities.util import *
+from Propre.Game.GraphDynamic import GraphDynamic
 import networkx as nx
 
 

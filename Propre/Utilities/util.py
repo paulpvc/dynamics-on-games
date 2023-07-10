@@ -3,7 +3,7 @@ import my_networkx as my_nx
 import matplotlib.pyplot as plt
 from itertools import product
 import numpy as np
-from Pile import Pile
+
 
 
 def get_graph(nodes: list, edges: list[tuple]):

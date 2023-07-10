@@ -1,4 +1,4 @@
-from util import *
+from Propre.Utilities.util import *
 
 
 class GraphDynamic:

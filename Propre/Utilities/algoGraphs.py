@@ -3,8 +3,8 @@ import my_networkx as my_nx
 import matplotlib.pyplot as plt
 from itertools import product
 import numpy as np
-from util import get_graph,affichage_dyna
-from LinkedList import *
+from Propre.Utilities.util import get_graph,affichage_dyna
+
 
 
 date = 0

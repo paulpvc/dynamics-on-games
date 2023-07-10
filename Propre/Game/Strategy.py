@@ -1,4 +1,4 @@
-from util import *
+from Propre.Utilities.util import *
 import my_networkx as nx
 
 

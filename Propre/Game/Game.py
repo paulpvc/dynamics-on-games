@@ -1,9 +1,9 @@
-from util import *
-from Player import Player
-from Graph_P1 import GraphP1
-from Graph_PC import GraphPC
-from Graph_bP1 import GraphbP1
-from Graph_bPC import GraphbPC
+from Propre.Utilities.util import *
+from Propre.Game.Player import Player
+from Propre.Game.Graph_P1 import GraphP1
+from Propre.Game.Graph_PC import GraphPC
+from Propre.Game.Graph_bP1 import GraphbP1
+from Propre.Game.Graph_bPC import GraphbPC
 
 
 class Game:

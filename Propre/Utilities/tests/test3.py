@@ -27,11 +27,11 @@ def test():
 
     game = Game(lst,edge_list,preferences)
 
-    #game.display_game_graph()
-    #game.display_dynamic_graph_PC()
+    game.display_game_graph()
+    game.display_dynamic_graph_PC()
     #game.contain_dw_sdw()
     #print(game.graph_of_dynamic_PC.contains_fair_cycle())
-    print(game.graph_of_dynamic_PC.does_fairly_terminate())
+    #print(game.graph_of_dynamic_PC.does_fairly_terminate())
 
 
 def test2():
@@ -77,4 +77,24 @@ def test4():
     pref_g.add_edges_from(edges)
     affichage_temp(pref_g)
 
-test4()
+
+def testBigDW():
+    players = [Player("vb"), Player("v1")]
+    arcs = [(players[1], players[0], {"w": "s1"})]
+    preferences = {}
+    for i in range(2, 11):
+        players.append(Player(f"v{i}"))
+        arcs.append((players[i-1], players[i], {"w": f"c{i-1}"}))
+        arcs.append((players[i], players[0], {"w": f"s{i}"}))
+        preferences[players[i]] = [(Strategy({f"s{i}"}), Strategy({f"c{i}", f"s{i+1 if i+1 < 11 else 1}"}))]
+    arcs.append((players[-1], players[1], {"w": "c10"}))
+    print(preferences)
+    print(arcs)
+    game = Game(players, arcs, preferences)
+    game.display_game_graph()
+    game.display_dynamic_graph_P1()
+    game.display_dynamic_graph_PC()
+    game.display_dynamics_terminations()
+    print(game.contain_dw_sdw())
+
+testBigDW()

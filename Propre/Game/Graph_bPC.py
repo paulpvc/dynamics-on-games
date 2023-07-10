@@ -1,7 +1,7 @@
-from util import *
+from Propre.Utilities.util import *
 import networkx as nx
-from Graph_bP1 import GraphbP1
-from GraphDynamic import GraphDynamic
+from Propre.Game.Graph_bP1 import GraphbP1
+from Propre.Game.GraphDynamic import GraphDynamic
 
 
 class GraphbPC(GraphDynamic):

@@ -1,6 +1,6 @@
-from util import *
+from Propre.Utilities.util import *
 import networkx as nx
-from algoGraphs import score
+from Propre.Utilities.algoGraphs import score
 
 class Player:
     def __init__(self, name):
