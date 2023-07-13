@@ -1,9 +1,7 @@
 import networkx as nx
-import my_networkx as my_nx
+from Propre.Utilities import my_networkx as my_nx
 import matplotlib.pyplot as plt
 from itertools import product
-import numpy as np
-
 
 
 def get_graph(nodes: list, edges: list[tuple]):

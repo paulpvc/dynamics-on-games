@@ -1,6 +1,5 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import my_networkx as my_nx
 
 
 def init():

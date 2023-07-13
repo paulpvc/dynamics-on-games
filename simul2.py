@@ -1,6 +1,3 @@
-import networkx as nx
-import my_networkx as my_nx
-import matplotlib.pyplot as plt
 from itertools import product
 from util import *
 

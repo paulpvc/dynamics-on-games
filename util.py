@@ -1,5 +1,5 @@
 import networkx as nx
-import my_networkx as my_nx
+from Propre.Utilities import my_networkx as my_nx
 import matplotlib.pyplot as plt
 
 
@@ -10,7 +10,7 @@ def affichage(G, title=""):
     :return: None
     """
     pos = nx.spring_layout(G, seed=10)
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(19,19))
     nx.draw_networkx_nodes(G, pos, ax=ax)
     nx.draw_networkx_labels(G, pos, ax=ax)
 
